@@ -18,7 +18,15 @@ Route::get('/', function () {
     return view('landing_page');
 });
 
-Route::get('/register', [AuthController::class, 'ShowRegister'])->name('register.page');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.page');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'ShowRegister'])->name('register.page');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/login', [AuthController::class, 'ShowLogin'])->name('login.page');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [AuthController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+

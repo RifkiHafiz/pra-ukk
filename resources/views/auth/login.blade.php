@@ -8,7 +8,7 @@
             <div class="card auth-card p-4">
                 <h4 class="text-center mb-4">Login</h4>
 
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" onsubmit="showLoading()">
                     @csrf
 
                     <div class="mb-3">
@@ -24,8 +24,8 @@
                     <button class="btn btn-primary w-100">Login</button>
 
                     <p class="text-center mt-3 mb-0">
-                        Belum punya akun?
-                        <a href="{{ route('register.page') }}">Daftar</a>
+                        Don't have an account?
+                        <a href="{{ route('register.page') }}">Register</a>
                     </p>
                 </form>
             </div>
@@ -33,3 +33,4 @@
         </div>
     </div>
 </div>
+@endsection

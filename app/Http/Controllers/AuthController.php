@@ -1,11 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function index() {
+        return view('dashboard');
+    }
     public function ShowRegister() {
         return view('auth.register');
     }
@@ -16,13 +22,13 @@ class AuthController extends Controller
 
     public function register(Request $request) {
         $request->validate([
-            'name' => 'required',
+            'username' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
 
         User::create([
-           'name' => $request->name,
+           'username' => $request->username,
            'email' => $request->email,
            'password' => Hash::make($request->password),
         ]);
@@ -39,10 +45,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('products.index');
+            return redirect()->route('dashboard');
         }
 
-        return view('products.index')->withErrors(['email' => 'Email atau Password Salah!']);
+        return view('dashboard')->withErrors(['email' => 'Email atau Password Salah!']);
     }
 
     public function logout(Request $request)
