@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number', 13)->nullable();
             $table->text('address')->nullable();
-            $table->enum('role', ['Admin', 'Petugas', 'Peminjam'])->default('Peminjam');
+            $table->enum('role', ['Admin', 'Staff', 'Borrower'])->default('Borrower');
+            $table->text('profile_picture')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

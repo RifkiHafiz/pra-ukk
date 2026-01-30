@@ -13,16 +13,7 @@
         <ul class="nav nav-pills flex-column gap-1">
 
             <li class="nav-item">
-                <a href="/home"
-                class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('home') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-house"></i>
-                    Home
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="/dashboard"
+                <a href="{{ route('dashboard') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('dashboard') ? 'active' : 'text-dark' }}">
                     <i class="bi bi-speedometer2"></i>
@@ -31,29 +22,47 @@
             </li>
 
             <li class="nav-item">
-                <a href="/orders"
+                <a href="/loans"
                 class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('orders') ? 'active' : 'text-dark' }}">
+                {{ request()->is('loans') ? 'active' : 'text-dark' }}">
                     <i class="bi bi-table"></i>
-                    Orders
+                    Loans
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/products"
+                <a href="/returns"
                 class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('products') ? 'active' : 'text-dark' }}">
+                {{ request()->is('returns') ? 'active' : 'text-dark' }}">
                     <i class="bi bi-grid"></i>
-                    Products
+                    Returns
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/customers"
+                <a href="/items"
                 class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('customers') ? 'active' : 'text-dark' }}">
+                {{ request()->is('items') ? 'active' : 'text-dark' }}">
+                    <i class="bi bi-grid"></i>
+                    Items
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="/categories"
+                class="nav-link d-flex align-items-center gap-2
+                {{ request()->is('categories') ? 'active' : 'text-dark' }}">
+                    <i class="bi bi-grid"></i>
+                    Categories
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="{{ route('user.index') }}"
+                class="nav-link d-flex align-items-center gap-2
+                {{ request()->is('user') ? 'active' : 'text-dark' }}">
                     <i class="bi bi-person-circle"></i>
-                    Customers
+                    Users
                 </a>
             </li>
 

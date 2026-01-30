@@ -125,18 +125,16 @@
     @if (Auth::user())
         <x-navbar brand="BorrowMe" />
        <x-sidebar />
-    @else
-        <x-navbar brand="BorrowMe" />
     @endif
 
     <x-loading fullscreen text="Loading..." />
 
     @if (Auth::user())
-        <div style="margin-left: 270px; padding-top: 20px;">
+        <div style="margin-left: 270px;">
             @yield('content')
         </div>
     @else
-        <div style="padding-top: 70px;">
+        <div>
             @yield('content')
         </div>
     @endif
