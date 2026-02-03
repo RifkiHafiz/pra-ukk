@@ -1,349 +1,56 @@
 @extends('layouts.app')
 @section('content')
 <style>
-    :root {
-        --primary-blue: #0ea5e9;
-        --blue-600: #0284c7;
-        --blue-700: #0369a1;
-        --blue-900: #0c4a6e;
-        --light-blue: #38bdf8;
-        --ultra-light-blue: #e0f2fe;
-        --white: #ffffff;
-        --gray-50: #f8fafc;
-        --gray-100: #f1f5f9;
-        --gray-200: #e2e8f0;
-        --gray-600: #475569;
-        --gray-800: #1e293b;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-    }
-
-    .page-container {
-        background: var(--gray-50);
-        min-height: 100vh;
-        padding: 30px 0;
-    }
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .page-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--blue-900);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .btn-back {
-        background: white;
-        color: var(--gray-600);
-        border: 2px solid var(--gray-200);
-        padding: 10px 25px;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-back:hover {
-        background: var(--gray-100);
-        color: var(--blue-900);
-        border-color: var(--primary-blue);
-    }
-
-    .form-container {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 2px 20px rgba(14, 165, 233, 0.08);
-        overflow: hidden;
-    }
-
-    .form-body {
-        padding: 40px;
-    }
-
-    .form-row {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 25px;
-        margin-bottom: 25px;
-    }
-
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-label {
-        font-weight: 600;
-        color: var(--blue-900);
-        margin-bottom: 10px;
-        display: block;
-        font-size: 0.95rem;
-    }
-
-    . {
-        color: var(--danger);
-        margin-left: 3px;
-    }
-
-    .form-control {
-        width: 100%;
-        border: 2px solid var(--gray-200);
-        border-radius: 10px;
-        padding: 12px 16px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: var(--white);
-    }
-
-    .form-control:focus {
-        border-color: var(--primary-blue);
-        outline: none;
-        background: var(--white);
-        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-    }
-
-    .form-control::placeholder {
-        color: var(--gray-600);
-        opacity: 0.6;
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    .form-select {
-        width: 100%;
-        border: 2px solid var(--gray-200);
-        border-radius: 10px;
-        padding: 12px 16px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
-        cursor: pointer;
-    }
-
-    .form-select:focus {
-        border-color: var(--primary-blue);
-        outline: none;
-        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-    }
-
-    .input-group {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .input-prefix {
-        position: absolute;
-        left: 16px;
-        color: var(--gray-600);
-        font-weight: 600;
-        pointer-events: none;
-    }
-
-    .input-group .form-control {
-        padding-left: 40px;
-    }
-
-    .password-wrapper {
-        position: relative;
-    }
-
-    .password-toggle {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: var(--gray-600);
-        cursor: pointer;
-        padding: 5px;
-        transition: color 0.3s ease;
-    }
-
-    .password-toggle:hover {
-        color: var(--primary-blue);
-    }
-
-    .form-help {
-        font-size: 0.875rem;
-        color: var(--gray-600);
-        margin-top: 6px;
-    }
-
-    .alert {
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 25px;
-        border: none;
-    }
-
-    .alert-danger {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
-    .alert ul {
-        margin: 8px 0 0 0;
-        padding-left: 20px;
-    }
-
-    .alert ul li {
-        margin-bottom: 4px;
-    }
-
-    .is-invalid {
-        border-color: var(--danger) !important;
-    }
-
-    .invalid-feedback {
-        color: var(--danger);
-        font-size: 0.875rem;
-        margin-top: 6px;
-        display: block;
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: flex-end;
-        padding-top: 30px;
-        border-top: 2px solid var(--gray-100);
-        margin-top: 30px;
-    }
-
-    .btn {
-        padding: 12px 35px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 1rem;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
+    /* Minimal custom styles - hanya yang tidak bisa digantikan Bootstrap */
     .btn-primary {
-        background: linear-gradient(135deg, var(--primary-blue), var(--blue-700));
-        color: white;
+        background: linear-gradient(135deg, #0ea5e9, #0369a1);
+        border: none;
     }
 
     .btn-primary:hover {
+        background: linear-gradient(135deg, #0284c7, #075985);
         transform: translateY(-2px);
         box-shadow: 0 5px 20px rgba(14, 165, 233, 0.4);
-        color: white;
     }
 
-    .btn-secondary {
-        background: var(--gray-200);
-        color: var(--gray-800);
-    }
-
-    .btn-secondary:hover {
-        background: var(--gray-600);
-        color: white;
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.15);
     }
 
     .file-upload-wrapper {
-        border: 2px dashed var(--gray-200);
-        border-radius: 10px;
-        padding: 30px;
-        text-align: center;
-        transition: all 0.3s ease;
-        background: var(--gray-50);
+        border: 2px dashed #e2e8f0;
+        background: #f8fafc;
         cursor: pointer;
+        transition: all 0.3s ease;
     }
 
     .file-upload-wrapper:hover {
-        border-color: var(--primary-blue);
-        background: var(--ultra-light-blue);
-    }
-
-    .file-upload-wrapper input[type="file"] {
-        display: none;
-    }
-
-    .upload-icon {
-        font-size: 3rem;
-        color: var(--primary-blue);
-        margin-bottom: 15px;
-    }
-
-    .upload-text {
-        color: var(--gray-800);
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .upload-subtext {
-        color: var(--gray-600);
-        font-size: 0.875rem;
-    }
-
-    .preview-image {
-        max-width: 200px;
-        max-height: 200px;
-        border-radius: 10px;
-        margin-top: 15px;
-        display: none;
-    }
-
-    @media (max-width: 768px) {
-        .form-row {
-            grid-template-columns: 1fr;
-        }
-
-        .form-body {
-            padding: 25px;
-        }
-
-        .form-actions {
-            flex-direction: column;
-        }
-
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
+        border-color: #0ea5e9;
+        background: #e0f2fe;
     }
 </style>
 
-<div class="page-container">
+<div class="bg-light min-vh-100 py-4">
     <div class="container">
         <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">
-                <i class="bi bi-person-plus-fill"></i>
-                Add New User
-            </h1>
-            <a href="{{ route('user.index') }}" class="btn-back">
-                <i class="bi bi-arrow-left"></i>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold text-primary mb-0">
+                <i class="bi bi-person-plus-fill me-2"></i>
+                 Edit User
+            </h3>
+            <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>
                 Back to Users
             </a>
         </div>
 
         <!-- Error Messages -->
         @if ($errors->any())
-        <div class="alert alert-danger">
+        <div class="alert alert-danger border-0 rounded-3 mb-4" role="alert">
             <strong><i class="bi bi-exclamation-circle me-2"></i>Whoops!</strong> There were some problems with your input.
-            <ul>
+            <ul class="mb-0 mt-2">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -352,170 +59,139 @@
         @endif
 
         <!-- Form Container -->
-        <div class="form-container">
-            <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
-                <div class="form-body">
                     <!-- Profile Picture Upload -->
-                    <div class="form-group">
-                        <label class="form-label">Profile Picture</label>
-                        <div class="file-upload-wrapper" onclick="document.getElementById('profile_picture').click()">
-                            <div class="upload-icon">
-                                <i class="bi bi-cloud-upload"></i>
-                            </div>
-                            <div class="upload-text">Click to upload profile picture</div>
-                            <div class="upload-subtext">PNG, JPG up to 2MB</div>
-                            <input type="file"
-                                   id="profile_picture"
-                                   name="profile_picture"
-                                   accept="image/*"
-                                   onchange="previewImage(event)">
-                            <img id="preview" class="preview-image" alt="Preview">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-primary">Profile Picture</label>
+                        <div class="file-upload-wrapper rounded-3 p-4 text-center" onclick="document.getElementById('profile_picture').click()">
+                            <i class="bi bi-cloud-upload display-4 text-primary d-block mb-3"></i>
+                            <p class="fw-semibold text-dark mb-1">Click to upload profile picture</p>
+                            <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
+                            <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="d-none" onchange="previewImage(event)">
+                            <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
                         </div>
-                        <div class="form-help">Optional: Upload a profile picture for this user</div>
+                        <div class="form-text">Optional: Upload a profile picture for this user</div>
                     </div>
 
                     <!-- Row 1: Full Name & Username -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="full_name" class="form-label">
-                                Full Name <span class="">*</span>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="full_name" class="form-label fw-semibold text-primary">
+                                Full Name <span class="text-danger">*</span>
                             </label>
-                            <input type="text"
-                                   class="form-control @error('full_name') is-invalid @enderror"
-                                   id="full_name"
-                                   name="full_name"
-                                   value="{{ old('full_name') }}"
-                                   placeholder="Enter full name"
-                                   >
+                            <input type="text" class="form-control @error('full_name') is-invalid @enderror"
+                                   id="full_name" name="full_name" value="{{ old('full_name', $user->full_name) }}"
+                                   placeholder="Enter full name" required>
                             @error('full_name')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <label for="username" class="form-label">
-                                Username <span class="">*</span>
+                        <div class="col-md-6">
+                            <label for="username" class="form-label fw-semibold text-primary">
+                                Username <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
-                                <span class="input-prefix">@</span>
-                                <input type="text"
-                                       class="form-control @error('username') is-invalid @enderror"
-                                       id="username"
-                                       name="username"
-                                       value="{{ old('username') }}"
-                                       placeholder="username"
-                                       >
+                                <span class="input-group-text bg-light border-end-0">@</span>
+                                <input type="text" class="form-control border-start-0 @error('username') is-invalid @enderror"
+                                       id="username" name="username" value="{{ old('username', $user->username) }}"
+                                       placeholder="username" required>
+                                @error('username')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            @error('username')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                            <div class="form-help">Username must be unique</div>
+                            <div class="form-text">Username must be unique</div>
                         </div>
                     </div>
 
                     <!-- Row 2: Email & Phone Number -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="email" class="form-label">
-                                Email <span class="">*</span>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-semibold text-primary">
+                                Email <span class="text-danger">*</span>
                             </label>
-                            <input type="email"
-                                   class="form-control @error('email') is-invalid @enderror"
-                                   id="email"
-                                   name="email"
-                                   value="{{ old('email') }}"
-                                   placeholder="user@example.com"
-                                   >
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                   id="email" name="email" value="{{ old('email', $user->email) }}"
+                                   placeholder="user@example.com" required>
                             @error('email')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <label for="phone_number" class="form-label">Phone Number</label>
-                            <input type="tel"
-                                   class="form-control @error('phone_number') is-invalid @enderror"
-                                   id="phone_number"
-                                   name="phone_number"
-                                   value="{{ old('phone_number') }}"
+                        <div class="col-md-6">
+                            <label for="phone_number" class="form-label fw-semibold text-primary">Phone Number</label>
+                            <input type="tel" class="form-control @error('phone_number') is-invalid @enderror"
+                                   id="phone_number" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}"
                                    placeholder="+62 812-3456-7890">
                             @error('phone_number')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
                     <!-- Row 3: Password & Role -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="password" class="form-label">
-                                Password <span class="">*</span>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label fw-semibold text-primary">
+                                Password <span class="text-danger">*</span>
                             </label>
-                            <div class="password-wrapper">
-                                <input type="password"
-                                       class="form-control @error('password') is-invalid @enderror"
-                                       id="password"
-                                       name="password"
-                                       placeholder="Enter password"
-                                       >
-                                <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                       id="password" name="password" placeholder="Enter password" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
                                     <i class="bi bi-eye" id="password-icon"></i>
                                 </button>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                            @error('password')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                            <div class="form-help">Minimum 6 characters</div>
+                            <div class="form-text">Minimum 6 characters</div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="role" class="form-label">
-                                Role <span class="">*</span>
+                        <div class="col-md-6">
+                            <label for="role" class="form-label fw-semibold text-primary">
+                                Role <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select @error('role') is-invalid @enderror"
-                                    id="role"
-                                    name="role"
-                                    >
+                            <select class="form-select @error('role') is-invalid @enderror" id="role" name="role" required>
                                 <option value="">Select Role</option>
                                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="borrower" {{ old('role') == 'borrower' ? 'selected' : '' }}>Borrower</option>
                                 <option value="lender" {{ old('role') == 'lender' ? 'selected' : '' }}>Lender</option>
                             </select>
                             @error('role')
-                                <span class="invalid-feedback">{{ $message }}</span>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
                     <!-- Address -->
-                    <div class="form-group">
-                        <label for="address" class="form-label">Address</label>
+                    <div class="mb-4">
+                        <label for="address" class="form-label fw-semibold text-primary">Address</label>
                         <textarea class="form-control @error('address') is-invalid @enderror"
-                                  id="address"
-                                  name="address"
-                                  rows="4"
+                                  id="address" name="address" rows="4"
                                   placeholder="Enter full address">{{ old('address') }}</textarea>
                         @error('address')
-                            <span class="invalid-feedback">{{ $message }}</span>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <!-- Form Actions -->
-                    <div class="form-actions">
-                        <a href="{{ route('user.index') }}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle"></i>
+                    <div class="d-flex gap-2 justify-content-end pt-3 border-top">
+                        <a href="{{ route('user.index') }}" class="btn btn-secondary px-4">
+                            <i class="bi bi-x-circle me-2"></i>
                             Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-circle me-2"></i>
                             Create User
                         </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -547,7 +223,7 @@
 
             reader.onload = function(e) {
                 preview.src = e.target.result;
-                preview.style.display = 'block';
+                preview.classList.remove('d-none');
             }
 
             reader.readAsDataURL(file);

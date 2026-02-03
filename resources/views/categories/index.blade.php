@@ -71,13 +71,13 @@
                 <div class="col-md-6">
                     <h3 class="card-title fw-bold text-primary mb-0 fs-4">
                         <i class="bi bi-people-fill me-2"></i>
-                        All Users
+                        All Categories
                     </h3>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="{{ route('user.create') }}" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                    <a href="{{ route('categories.create') }}" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Add New User
+                        Add New Category
                     </a>
                 </div>
             </div>
@@ -86,44 +86,26 @@
         <div class="card-body p-0">
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-hover mb-0" id="usersTable">
+                <table class="table table-hover mb-0" id="categoriesTable">
                     <thead>
                         <tr>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">ID</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">User</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Username</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Role</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Phone Number</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Category Name</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($users as $user)
+                        @forelse ($categories as $category)
                             <tr>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
-                                <td class="p-3 align-middle border-bottom border-light">
-                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold me-2 user-avatar">
-                                        {{ $user->profile_picture }}
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <span class="d-block fw-semibold text-primary">{{ $user->full_name ?? 'No Name' }}</span>
-                                        <span class="d-block small text-secondary">{{ $user->email }}</span>
-                                    </div>
-                                </td>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->username }}</td>
-                                <td class="p-3 align-middle border-bottom border-light">
-                                    <span class="badge bg-success rounded-2 fw-semibold px-3 py-2 small">{{ $user->role }}</span>
-                                </td>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->phone_number ?? '0888' }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $category->id }}</td>
+
+                                <td class="p-3 align-middle border-bottom border-light">{{ $category->category_name }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex gap-2 justify-content-center">
-                                        <a href="{{ route('user.show', $user->id) }}" class="btn btn-info btn-sm text-white px-3 py-1">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1">
+                                        <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete(1)" title="Delete">
+                                        <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete({{ $category->id }})" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -134,7 +116,7 @@
                                 <td colspan="6" class="text-center py-5">
                                     <div class="text-muted">
                                         <i class="bi bi-inbox display-1 d-block mb-3 opacity-25"></i>
-                                        <h4 class="text-secondary mb-2">No Users Found</h4>
+                                        <h4 class="text-secondary mb-2">No Categories Found</h4>
                                         <p class="text-secondary">Data belum tersedia</p>
                                     </div>
                                 </td>

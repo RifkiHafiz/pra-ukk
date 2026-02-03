@@ -361,10 +361,18 @@
                         <a class="nav-link" href="#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('login') }}" class="btn-nav btn-login">Login</a>
+                        @if (Auth::user())
+                            <a href="{{ route('dashboard') }}" class="btn-nav btn-login">Login</a>
+                        @else
+                            <a href="{{ route('login') }}" class="btn-nav btn-login">Login</a>
+                        @endif
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('register.page') }}" class="btn-nav btn-register">Register</a>
+                        @if (Auth::user())
+                            <a href="{{ route('dashboard') }}" class="btn-nav btn-register">Register</a>
+                        @else
+                            <a href="{{ route('register.page') }}" class="btn-nav btn-register">Register</a>
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -384,7 +392,11 @@
                         Simplify your equipment borrowing process with BorrowMe. Request, track, and manage equipment loans seamlessly in one powerful platform.
                     </p>
                     <div>
-                        <a href="{{ route('register.page') }}" class="btn-hero btn-primary-hero">Get Started Free</a>
+                        @if (Auth::user())
+                            <a href="{{ route('dashboard') }}" class="btn-hero btn-primary-hero">Go to Dashboard</a>
+                        @else
+                            <a href="{{ route('register.page') }}" class="btn-hero btn-primary-hero">Get Started Free</a>
+                        @endif
                         <a href="#how-it-works" class="btn-hero btn-secondary-hero">Learn More</a>
                     </div>
                 </div>

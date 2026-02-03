@@ -16,43 +16,43 @@
                 <a href="{{ route('dashboard') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('dashboard') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-speedometer2"></i>
+                    <i class="bi bi-clipboard-data"></i>
                     Dashboard
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/loans"
+                <a href="{{ route('loans.index') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('loans') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-table"></i>
+                    <i class="bi bi-bag-plus"></i>
                     Loans
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/returns"
+                <a href="{{ route('returns.index') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('returns') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-arrow-left-circle"></i>
                     Returns
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/items"
+                <a href="{{ route('items.index') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('items') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-tools"></i>
                     Items
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="/categories"
+                <a href="{{ route('categories.index') }}"
                 class="nav-link d-flex align-items-center gap-2
                 {{ request()->is('categories') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-card-checklist"></i>
                     Categories
                 </a>
             </li>

@@ -16,5 +16,10 @@ class Item extends Model
         'total_quantity',
         'available_quantity',
         'item_image',
+        'condition',
     ];
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ReturnController;
+use App\Http\Controllers\LoanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +21,7 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('landing_page');
-});
+})->name('landing');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'ShowRegister'])->name('register.page');
@@ -31,5 +35,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::resource('user', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('items', ItemController::class);
+    Route::resource('returns', ReturnController::class);
+    Route::resource('loans', LoanController::class);
 });
 

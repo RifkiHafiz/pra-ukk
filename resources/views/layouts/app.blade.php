@@ -122,14 +122,14 @@
     }
 </style>
 <body style="background-color: F9F8F6;" class="poppins-regular">
-    @if (Auth::user())
-        <x-navbar brand="BorrowMe" />
+    @if (Auth::user() && !request()->routeIs('login.page', 'register.page', 'landing'))
+        <x-navbar />
        <x-sidebar />
     @endif
 
     <x-loading fullscreen text="Loading..." />
 
-    @if (Auth::user())
+    @if (Auth::user() && !request()->routeIs('login.page', 'register.page', 'landing'))
         <div style="margin-left: 270px;">
             @yield('content')
         </div>
