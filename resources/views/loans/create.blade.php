@@ -236,4 +236,199 @@
         @endif
     </div>
 </div>
+
+<!-- Borrow Item Modal -->
+<div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header modal-header-gradient text-white rounded-top-4 border-0">
+                <h5 class="modal-title fw-bold" id="borrowModalLabel">
+                    <i class="bi bi-bag-plus me-2"></i>
+                    Borrow Item
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('loans.store') }}" method="POST" id="borrowForm">
+                @csrf
+                <div class="modal-body p-4">
+                    <!-- Item Info Display -->
+                    <div class="alert alert-info border-0 rounded-3 mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-info-circle-fill fs-4"></i>
+                            <div>
+                                <div class="fw-bold mb-1" id="modalItemName">Item Name</div>
+                                <div class="small">
+                                    <span class="badge bg-dark me-2" id="modalItemCode">CODE</span>
+                                    <span class="text-muted">Available: <strong id="modalAvailableQty">0</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="item_id" id="itemId">
+
+                    <!-- Quantity -->
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label fw-semibold text-primary">
+                            Quantity <span class="text-danger">*</span>
+                        </label>
+                        <input type="number"
+                               class="form-control rounded-3 @error('quantity') is-invalid @enderror"
+                               id="quantity"
+                               name="quantity"
+                               min="1"
+                               value="{{ old('quantity', 1) }}"
+                               required>
+                        @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Enter the quantity you want to borrow</div>
+                    </div>
+
+                    <!-- Loan Date -->
+                    <div class="mb-3">
+                        <label for="loan_date" class="form-label fw-semibold text-primary">
+                            Loan Date <span class="text-danger">*</span>
+                        </label>
+                        <input type="date"
+                               class="form-control rounded-3 @error('loan_date') is-invalid @enderror"
+                               id="loan_date"
+                               name="loan_date"
+                               value="{{ old('loan_date', date('Y-m-d')) }}"
+                               required>
+                        @error('loan_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Return Date -->
+                    <div class="mb-3">
+                        <label for="return_date" class="form-label fw-semibold text-primary">
+                            Expected Return Date <span class="text-danger">*</span>
+                        </label>
+                        <input type="date"
+                               class="form-control rounded-3 @error('return_date') is-invalid @enderror"
+                               id="return_date"
+                               name="return_date"
+                               value="{{ old('return_date') }}"
+                               required>
+                        @error('return_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Select when you plan to return the item</div>
+                    </div>
+
+                    <!-- Notes (Optional) -->
+                    <div class="mb-3">
+                        <label for="notes" class="form-label fw-semibold text-primary">
+                            Notes <span class="text-muted small">(Optional)</span>
+                        </label>
+                        <textarea class="form-control rounded-3 @error('notes') is-invalid @enderror"
+                                  id="notes"
+                                  name="notes"
+                                  rows="3"
+                                  placeholder="Add any additional notes or special requests...">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-secondary rounded-3 px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-3 px-4">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Submit Loan Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Open borrow modal with item details
+    function openBorrowModal(itemId, itemName, availableQty, itemCode) {
+        // Set item details in modal
+        document.getElementById('itemId').value = itemId;
+        document.getElementById('modalItemName').textContent = itemName;
+        document.getElementById('modalItemCode').textContent = itemCode;
+        document.getElementById('modalAvailableQty').textContent = availableQty;
+
+        // Set max quantity
+        document.getElementById('quantity').max = availableQty;
+
+        // Set minimum return date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('return_date').min = tomorrow.toISOString().split('T')[0];
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('borrowModal'));
+        modal.show();
+    }
+
+    // Search items function
+    function searchItems() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.item-container');
+
+        items.forEach(item => {
+            const itemName = item.getAttribute('data-name');
+            if (itemName.includes(searchValue)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter by category function
+    function filterCategory(categoryId) {
+        const items = document.querySelectorAll('.item-container');
+        const buttons = document.querySelectorAll('[onclick^="filterCategory"]');
+
+        // Update active button
+        buttons.forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-primary');
+        });
+        event.target.classList.remove('btn-outline-primary');
+        event.target.classList.add('btn-primary');
+
+        // Filter items
+        items.forEach(item => {
+            const itemCategory = item.getAttribute('data-category');
+            if (categoryId === 'all' || itemCategory === categoryId) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Validate quantity on input
+    document.addEventListener('DOMContentLoaded', function() {
+        const quantityInput = document.getElementById('quantity');
+
+        if (quantityInput) {
+            quantityInput.addEventListener('input', function() {
+                const max = parseInt(this.max);
+                const value = parseInt(this.value);
+
+                if (value > max) {
+                    this.value = max;
+                }
+                if (value < 1) {
+                    this.value = 1;
+                }
+            });
+        }
+    });
+</script>
+
 @endsection

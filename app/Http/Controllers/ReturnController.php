@@ -3,8 +3,91 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ReturnItem;
+use App\Models\Loan;
+use App\Models\Item;
 
 class ReturnController extends Controller
 {
-    //
+    public function index() {
+        $returns = ReturnItem::with('loan.item', 'loan.user')->get();
+        $loans = Loan::where('status', 'borrowed')->with('item', 'user')->get();
+        return view('returns.index', compact('returns', 'loans'));
+    }
+
+    public function create() {
+        $loans = Loan::where('status', 'borrowed')->with('item', 'user')->get();
+        return view('returns.create', compact('loans'));
+    }
+
+    public function store(Request $request) {
+        $request->validate([
+            'loan_id' => 'required|exists:loans,id',
+            'return_date' => 'required|date',
+            'condition' => 'required|in:good,damaged,lost',
+            'fine' => 'required|integer|min:0',
+        ]);
+
+        $loan = Loan::findOrFail($request->loan_id);
+
+        if ($loan->status !== 'borrowed') {
+            return redirect()->back()->with(['error' => 'Loan status harus borrowed untuk mengembalikan!']);
+        }
+
+        $returnData = [
+            'loan_id' => $request->loan_id,
+            'staff_id' => auth()->id(),
+            'return_date' => $request->return_date,
+            'condition' => $request->condition,
+            'fine' => $request->fine,
+            'notes' => $request->input('notes', ''),
+        ];
+
+        $returnItem = ReturnItem::create($returnData);
+
+        $item = $loan->item;
+        $item->available_quantity += $loan->quantity;
+        $item->save();
+
+        $loan->status = 'returned';
+        $loan->save();
+
+        return redirect()->route('returns.index')->with(['success' => 'Item returned successfully!']);
+    }
+
+    public function update(Request $request, $id) {
+        $returnItem = ReturnItem::findOrFail($id);
+        $loan = $returnItem->loan;
+
+        $request->validate([
+            'return_date' => 'required|date',
+            'condition' => 'required|in:good,damaged,lost',
+            'fine' => 'required|integer|min:0',
+        ]);
+
+        $returnItem->update([
+            'return_date' => $request->return_date,
+            'condition' => $request->condition,
+            'fine' => $request->fine,
+            'notes' => $request->input('notes', ''),
+        ]);
+
+        return redirect()->route('returns.index')->with(['success' => 'Return item updated successfully!']);
+    }
+
+    public function destroy($id) {
+        $returnItem = ReturnItem::findOrFail($id);
+        $loan = $returnItem->loan;
+        $item = $loan->item;
+
+        $item->available_quantity -= $loan->quantity;
+        $item->save();
+
+        $loan->status = 'borrowed';
+        $loan->save();
+
+        $returnItem->delete();
+
+        return redirect()->route('returns.index')->with(['success' => 'Return item deleted successfully!']);
+    }
 }

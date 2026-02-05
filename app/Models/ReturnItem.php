@@ -17,4 +17,8 @@ class ReturnItem extends Model
         'fine',
         'notes',
     ];
+
+    public function loan() {
+        return $this->belongsTo(Loan::class);
+    }
 }

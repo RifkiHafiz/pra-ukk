@@ -42,5 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('items', ItemController::class);
     Route::resource('returns', ReturnController::class);
     Route::resource('loans', LoanController::class);
+    Route::get('/loans/index-table', [LoanController::class, 'show'])->name('loans.index-table');
 });
 

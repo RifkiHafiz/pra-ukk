@@ -20,4 +20,16 @@ class Loan extends Model
         'notes',
         'status',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'borrower_id');
+    }
+
+    public function item() {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function returnItem() {
+        return $this->hasOne(ReturnItem::class);
+    }
 }

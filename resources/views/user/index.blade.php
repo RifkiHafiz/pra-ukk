@@ -136,7 +136,6 @@
                                     <div class="text-muted">
                                         <i class="bi bi-inbox display-1 d-block mb-3 opacity-25"></i>
                                         <h4 class="text-secondary mb-2">No Users Found</h4>
-                                        <p class="text-secondary">Data belum tersedia</p>
                                     </div>
                                 </td>
                             </tr>
