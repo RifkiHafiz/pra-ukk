@@ -58,12 +58,12 @@
         <div class="card border-0 rounded-4 shadow-sm mb-4">
             <div class="card-body p-4">
                 <div class="row align-items-center">
-                    <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="col-md-8 mb-3 mb-md-0">
                         <h3 class="fw-bold text-primary mb-0 fs-4">
                             <i class="bi bi-box-seam-fill me-2"></i>
-                            All Items
+                            All Items to Borrow
                         </h3>
-                        <p class="text-muted small mb-0 mt-1">Manage your inventory items</p>
+                        <p class="text-muted small mb-0 mt-1">Manage your items to borrow</p>
                     </div>
                     <div class="col-md-4 mb-3 mb-md-0">
                         <div class="input-group">
@@ -74,12 +74,6 @@
                                    id="searchInput" placeholder="Search items..."
                                    onkeyup="searchItems()">
                         </div>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <a href="{{ route('items.create') }}" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
-                            <i class="bi bi-plus-circle me-2"></i>
-                            Add New Item
-                        </a>
                     </div>
                 </div>
             </div>
@@ -189,21 +183,11 @@
 
                             <!-- Action Buttons -->
                             <div class="d-flex gap-2">
-                                <a href="{{ route('items.show', $item->id) }}"
-                                   class="btn btn-info btn-sm text-white flex-fill">
-                                    <i class="bi bi-eye me-1"></i>
-                                    View
-                                </a>
                                 <a href="{{ route('items.edit', $item->id) }}"
                                    class="btn btn-warning btn-sm text-white flex-fill">
                                     <i class="bi bi-pencil me-1"></i>
-                                    Edit
+                                    Borrow
                                 </a>
-                                <button class="btn btn-danger btn-sm flex-fill"
-                                        onclick="confirmDelete({{ $item->id }})"
-                                        title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </div>
                         </div>
                     </div>

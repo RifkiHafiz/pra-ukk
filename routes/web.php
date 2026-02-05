@@ -34,6 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+
     Route::resource('user', UserController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('items', ItemController::class);

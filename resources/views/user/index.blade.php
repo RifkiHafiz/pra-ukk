@@ -89,7 +89,7 @@
                 <table class="table table-hover mb-0" id="usersTable">
                     <thead>
                         <tr>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">ID</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">No</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">User</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Username</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Role</th>
@@ -103,7 +103,8 @@
                                 <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold me-2 user-avatar">
-                                        {{ $user->profile_picture }}
+                                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-avatar.svg') }}" alt="Profile"
+                                            class="rounded-circle object-fit-cover border border-white" width="35" height="35">
                                     </div>
                                     <div class="d-inline-block align-middle">
                                         <span class="d-block fw-semibold text-primary">{{ $user->full_name ?? 'No Name' }}</span>
@@ -114,7 +115,7 @@
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <span class="badge bg-success rounded-2 fw-semibold px-3 py-2 small">{{ $user->role }}</span>
                                 </td>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->phone_number ?? '0888' }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $user->phone_number ?? '0812-3456-7890' }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex gap-2 justify-content-center">
                                         <a href="{{ route('user.show', $user->id) }}" class="btn btn-info btn-sm text-white px-3 py-1">

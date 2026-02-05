@@ -34,19 +34,17 @@
 
 <div class="bg-light min-vh-100 py-4">
     <div class="container">
-        <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-person-plus-fill me-2"></i>
-                 Edit User
+                 Edit Profile
             </h3>
-            <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>
-                Back to Users
+                Back to Dashboard
             </a>
         </div>
 
-        <!-- Error Messages -->
         @if ($errors->any())
         <div class="alert alert-danger border-0 rounded-3 mb-4" role="alert">
             <strong><i class="bi bi-exclamation-circle me-2"></i>Whoops!</strong> There were some problems with your input.
@@ -58,14 +56,11 @@
         </div>
         @endif
 
-        <!-- Form Container -->
         <div class="card border-0 rounded-4 shadow-sm">
             <div class="card-body p-4 p-md-5">
-                <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PUT')
 
-                    <!-- Profile Picture Upload -->
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-primary">Profile Picture</label>
                         <div class="file-upload-wrapper rounded-3 p-4 text-center" onclick="document.getElementById('profile_picture').click()">
@@ -73,24 +68,19 @@
                             <p class="fw-semibold text-dark mb-1">Click to upload profile picture</p>
                             <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
                             <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="d-none" onchange="previewImage(event)">
-                            @if($user->profile_picture)
-                                <img id="preview" class="img-thumbnail mt-3" style="max-width: 200px;" src="{{ asset('storage/' . $user->profile_picture) }}" alt="Preview">
-                            @else
-                                <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
-                            @endif
+                            <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
                         </div>
                         <div class="form-text">Optional: Upload a profile picture for this user</div>
                     </div>
 
-                    <!-- Row 1: Full Name & Username -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="full_name" class="form-label fw-semibold text-primary">
-                                Full Name
+                                Full Name <span class="text-danger">*</span>
                             </label>
                             <input type="text" class="form-control @error('full_name') is-invalid @enderror"
                                    id="full_name" name="full_name" value="{{ old('full_name', $user->full_name) }}"
-                                   placeholder="Enter full name">
+                                   placeholder="Enter full name" required>
                             @error('full_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -98,12 +88,12 @@
 
                         <div class="col-md-6">
                             <label for="username" class="form-label fw-semibold text-primary">
-                                Username
+                                Username <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <input type="text" class="form-control border-start-0 @error('username') is-invalid @enderror"
                                        id="username" name="username" value="{{ old('username', $user->username) }}"
-                                       placeholder="username">
+                                       placeholder="username" required>
                                 @error('username')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -112,15 +102,14 @@
                         </div>
                     </div>
 
-                    <!-- Row 2: Email & Phone Number -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="email" class="form-label fw-semibold text-primary">
-                                Email
+                                Email <span class="text-danger">*</span>
                             </label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                    id="email" name="email" value="{{ old('email', $user->email) }}"
-                                   placeholder="user@example.com">
+                                   placeholder="user@example.com" required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -137,42 +126,6 @@
                         </div>
                     </div>
 
-                    <!-- Row 3: Password & Role -->
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label for="password" class="form-label fw-semibold text-primary">
-                                Password
-                            </label>
-                            <div class="input-group">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                       id="password" name="password" placeholder="Enter password">
-                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
-                                    <i class="bi bi-eye" id="password-icon"></i>
-                                </button>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-text">Minimum 6 characters</div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="role" class="form-label fw-semibold text-primary">
-                                Role
-                            </label>
-                            <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
-                                <option value="">Select Role</option>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="borrower" {{ old('role', $user->role) == 'borrower' ? 'selected' : '' }}>Borrower</option>
-                                <option value="lender" {{ old('role', $user->role) == 'lender' ? 'selected' : '' }}>Lender</option>
-                            </select>
-                            @error('role')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Address -->
                     <div class="mb-4">
                         <label for="address" class="form-label fw-semibold text-primary">Address</label>
                         <textarea class="form-control @error('address') is-invalid @enderror"
@@ -183,7 +136,6 @@
                         @enderror
                     </div>
 
-                    <!-- Form Actions -->
                     <div class="d-flex gap-2 justify-content-end pt-3 border-top">
                         <a href="{{ route('user.index') }}" class="btn btn-secondary px-4">
                             <i class="bi bi-x-circle me-2"></i>
@@ -191,7 +143,7 @@
                         </a>
                         <button type="submit" class="btn btn-primary px-4">
                             <i class="bi bi-check-circle me-2"></i>
-                            Update User
+                            Update Profile
                         </button>
                     </div>
                 </form>
@@ -201,22 +153,6 @@
 </div>
 
 <script>
-    // Toggle password visibility
-    function togglePassword() {
-        const passwordField = document.getElementById('password');
-        const passwordIcon = document.getElementById('password-icon');
-
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            passwordIcon.classList.remove('bi-eye');
-            passwordIcon.classList.add('bi-eye-slash');
-        } else {
-            passwordField.type = 'password';
-            passwordIcon.classList.remove('bi-eye-slash');
-            passwordIcon.classList.add('bi-eye');
-        }
-    }
-
     // Preview uploaded image
     function previewImage(event) {
         const file = event.target.files[0];
