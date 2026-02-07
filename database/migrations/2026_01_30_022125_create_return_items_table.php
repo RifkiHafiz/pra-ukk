@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('staff_id')->constrained('users')->onDelete('cascade');
             $table->date('return_date');
             $table->enum('condition', ['good', 'damaged', 'lost']);
-            $table->integer('fine')->default(0);
             $table->text('notes')->nullable();
             $table->timestamps();
         });

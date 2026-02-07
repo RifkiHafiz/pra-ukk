@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\ActivityLog;
 
 class CategoryController extends Controller
 {
@@ -21,8 +22,13 @@ class CategoryController extends Controller
             'category_name' => 'required|string|max:255',
         ]);
 
-        Category::create([
+        $category = Category::create([
             'category_name' => $request->category_name,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Created category: ' . $category->category_name
         ]);
 
         return redirect()->route('categories.index')->with(['success' => 'Category created successfully!']);
@@ -44,12 +50,23 @@ class CategoryController extends Controller
             'category_name' => $request->category_name,
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated category: ' . $category->category_name
+        ]);
+
         return redirect()->route('categories.index')->with(['success' => 'Category updated successfully!']);
     }
 
     public function destroy($id) {
         $category = Category::findOrFail($id);
+        $categoryName = $category->category_name;
         $category->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Deleted category: ' . $categoryName
+        ]);
 
         return redirect()->route('categories.index')->with(['success' => 'Category deleted successfully!']);
     }

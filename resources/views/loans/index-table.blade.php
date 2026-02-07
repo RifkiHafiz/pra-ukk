@@ -70,15 +70,9 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <h3 class="card-title fw-bold text-primary mb-0 fs-4">
-                        <i class="bi bi-people-fill me-2"></i>
+                        <i class="bi bi-bag-plus-fill me-2"></i>
                         All Loans
                     </h3>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="{{ route('loans.create') }}" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add New Loans
-                    </a>
                 </div>
             </div>
         </div>
@@ -112,20 +106,45 @@
                                         <span class="badge bg-warning rounded-pill px-3 py-2">Submitted</span>
                                     @elseif($loan->status === 'approved')
                                         <span class="badge bg-success rounded-pill px-3 py-2">Approved</span>
+                                    @elseif($loan->status === 'waiting')
+                                        <span class="badge bg-info rounded-pill px-3 py-2">Waiting</span>
+                                    @elseif($loan->status === 'returned')
+                                        <span class="badge bg-secondary rounded-pill px-3 py-2">Returned</span>
                                     @else
-                                        <span class="badge bg-info rounded-pill px-3 py-2">Returned</span>
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">Rejected</span>
                                     @endif
                                 </td>
                                 <td class="p-3 align-middle border-bottom border-light">
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <button class="btn btn-warning btn-sm text-white px-3 py-1"
-                                                onclick="openBorrowModal({{ $loan->item->id }}, '{{ $loan->item->item_name }}', {{ $loan->item->available_quantity }}, '{{ $loan->item->item_code }}')"
-                                                {{ $loan->item->available_quantity <= 0 ? 'disabled' : '' }}>
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete({{ $loan->id }})" title="Delete">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                    <div class="d-flex flex-column gap-2">
+                                        {{-- Approve button for submitted loans --}}
+                                        @if($loan->status === 'submitted')
+                                            <form action="{{ route('loans.approve', $loan->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm w-100 px-3 py-1" title="Approve Loan">
+                                                    <i class="bi bi-check-circle me-1"></i> Approve
+                                                </button>
+                                            </form>
+                                        @endif
+                                        
+                                        {{-- Complete button for waiting loans --}}
+                                        @if($loan->status === 'waiting')
+                                            <form action="{{ route('loans.complete', $loan->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-info btn-sm w-100 px-3 py-1 text-white" title="Complete Loan">
+                                                    <i class="bi bi-check-circle-fill me-1"></i> Complete
+                                                </button>
+                                            </form>
+                                        @endif
+                                        
+                                        {{-- Edit and Delete buttons (always visible) --}}
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('loans.edit', $loan->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1 flex-fill">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm px-3 py-1 flex-fill" onclick="confirmDelete({{ $loan->id }})" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -163,120 +182,6 @@
                     </li>
                 </ul>
             </nav>
-        </div>
-    </div>
-</div>
-
-<!-- Borrow Item Modal -->
-<div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow">
-            <div class="modal-header modal-header-gradient text-white rounded-top-4 border-0">
-                <h5 class="modal-title fw-bold" id="borrowModalLabel">
-                    <i class="bi bi-bag-plus me-2"></i>
-                    Edit Item to Borrow
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <form action="{{ route('loans.update', $loan->id) }}" method="POST" id="borrowForm">
-                @csrf
-                @method('PUT')
-                <div class="modal-body p-4">
-                    <!-- Item Info Display -->
-                    <div class="alert alert-info border-0 rounded-3 mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                            <i class="bi bi-info-circle-fill fs-4"></i>
-                            <div>
-                                <div class="fw-bold mb-1" id="modalItemName">Item Name</div>
-                                <div class="small">
-                                    <span class="badge bg-dark me-2" id="modalItemCode">CODE</span>
-                                    <span class="text-muted">Available: <strong id="modalAvailableQty">0</strong></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="item_id" id="itemId">
-
-                    <!-- Quantity -->
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label fw-semibold text-primary">
-                            Quantity <span class="text-danger">*</span>
-                        </label>
-                        <input type="number"
-                               class="form-control rounded-3 @error('quantity') is-invalid @enderror"
-                               id="quantity"
-                               name="quantity"
-                               min="1"
-                               value="{{ old('quantity', $loan->quantity) }}"
-                               required>
-                        @error('quantity')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        <div class="form-text">Enter the quantity you want to borrow</div>
-                    </div>
-
-                    <!-- Loan Date -->
-                    <div class="mb-3">
-                        <label for="loan_date" class="form-label fw-semibold text-primary">
-                            Loan Date <span class="text-danger">*</span>
-                        </label>
-                        <input type="date"
-                               class="form-control rounded-3 @error('loan_date') is-invalid @enderror"
-                               id="loan_date"
-                               name="loan_date"
-                               value="{{ old('loan_date', date('Y-m-d'), $loan->loan_date) }}"
-                               required>
-                        @error('loan_date')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <!-- Return Date -->
-                    <div class="mb-3">
-                        <label for="return_date" class="form-label fw-semibold text-primary">
-                            Expected Return Date <span class="text-danger">*</span>
-                        </label>
-                        <input type="date"
-                               class="form-control rounded-3 @error('return_date') is-invalid @enderror"
-                               id="return_date"
-                               name="return_date"
-                               value="{{ old('return_date', $loan->return_date) }}"
-                               required>
-                        @error('return_date')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        <div class="form-text">Select when you plan to return the item</div>
-                    </div>
-
-                    <!-- Notes (Optional) -->
-                    <div class="mb-3">
-                        <label for="notes" class="form-label fw-semibold text-primary">
-                            Notes <span class="text-muted small">(Optional)</span>
-                        </label>
-                        <textarea class="form-control rounded-3 @error('notes') is-invalid @enderror"
-                                  id="notes"
-                                  name="notes"
-                                  rows="3"
-                                  placeholder="Add any additional notes or special requests...">{{ old('notes', $loan->notes) }}</textarea>
-                        @error('notes')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-secondary rounded-3 px-4" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-2"></i>
-                        Cancel
-                    </button>
-                    <button type="submit" class="btn btn-primary rounded-3 px-4">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Submit Loan Request
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

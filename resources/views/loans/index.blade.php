@@ -189,12 +189,11 @@
 
                             <!-- Action Button -->
                             <div class="d-grid">
-                                <button class="btn btn-primary btn-sm"
-                                        onclick="openBorrowModal({{ $item->id }}, '{{ $item->item_name }}', {{ $item->available_quantity }}, '{{ $item->item_code }}')"
+                                <a href="{{ route('loans.create', ['item_id' => $item->id]) }}" class="btn btn-primary btn-sm"
                                         {{ $item->available_quantity <= 0 ? 'disabled' : '' }}>
                                     <i class="bi bi-bag-plus me-1"></i>
                                     {{ $item->available_quantity > 0 ? 'Borrow Item' : 'Not Available' }}
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -214,22 +213,22 @@
 
         <!-- Pagination -->
         @if($items->count() > 0)
-            <nav aria-label="Page navigation" class="mt-4">
+            <nav aria-label="Page navigation" class="p-3">
                 <ul class="pagination justify-content-center mb-0">
                     <li class="page-item disabled">
-                        <a class="page-link rounded-3 mx-1" href="#" tabindex="-1">Previous</a>
+                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#" tabindex="-1">Previous</a>
                     </li>
                     <li class="page-item active">
-                        <a class="page-link rounded-3 mx-1" href="#">1</a>
+                        <a class="page-link bg-primary border-primary rounded-2 px-3 py-2 mx-1" href="#">1</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link rounded-3 mx-1" href="#">2</a>
+                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">2</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link rounded-3 mx-1" href="#">3</a>
+                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">3</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link rounded-3 mx-1" href="#">Next</a>
+                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">Next</a>
                     </li>
                 </ul>
             </nav>

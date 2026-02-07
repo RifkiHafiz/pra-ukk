@@ -26,11 +26,11 @@
             <div>
                 <h1 class="h2 fw-bold text-primary mb-1">
                     <i class="bi bi-bag-plus-fill me-2"></i>
-                    Create New Loan
+                    Edit Loan
                 </h1>
-                <p class="text-muted mb-0">Submit a loan request for borrowing items</p>
+                <p class="text-muted mb-0">Edit loan request for borrowing items</p>
             </div>
-            <a href="{{ route('loans.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('loans.index-table') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>
                 Back to Loans
             </a>
@@ -63,8 +63,9 @@
             <div class="col">
                 <div class="card border-0 rounded-4 shadow-sm">
                     <div class="card-body p-4 p-md-5">
-                        <form action="{{ route('loans.store') }}" method="POST" id="loanForm">
+                        <form action="{{ route('loans.update', $loan->id) }}" method="POST" id="loanForm">
                             @csrf
+                            @method('PUT')
 
                             <!-- Item Preview Card -->
                             <div class="card border-0 bg-light rounded-3 mb-4" id="itemPreviewCard" style="display: none;">
@@ -122,7 +123,7 @@
                                        name="quantity"
                                        min="1"
                                        max="{{ $selectedItem->available_quantity ?? '' }}"
-                                       value="{{ old('quantity', 1) }}"
+                                       value="{{ old('quantity', $loan->quantity) }}"
                                        required>
                                 @error('quantity')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -146,7 +147,7 @@
                                            class="form-control rounded-3 @error('loan_date') is-invalid @enderror"
                                            id="loan_date"
                                            name="loan_date"
-                                           value="{{ old('loan_date', date('Y-m-d')) }}"
+                                           value="{{ old('loan_date', $loan->loan_date) }}"
                                            required>
                                     @error('loan_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -161,7 +162,7 @@
                                            class="form-control rounded-3 @error('return_date') is-invalid @enderror"
                                            id="return_date"
                                            name="return_date"
-                                           value="{{ old('return_date') }}"
+                                           value="{{ old('return_date', $loan->return_date) }}"
                                            required>
                                     @error('return_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -178,7 +179,7 @@
                                           id="notes"
                                           name="notes"
                                           rows="4"
-                                          placeholder="Add any additional notes or special requests...">{{ old('notes') }}</textarea>
+                                          placeholder="Add any additional notes or special requests...">{{ old('notes', $loan->notes) }}</textarea>
                                 @error('notes')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

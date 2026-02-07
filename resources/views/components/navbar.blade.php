@@ -14,7 +14,8 @@
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
                             href="#"
                             role="button"
-                            data-bs-toggle="dropdown">
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
 
                                 {{-- Foto Profile --}}
                                 <img

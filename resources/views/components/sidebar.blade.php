@@ -27,7 +27,7 @@
     }
 </style>
     <div class="d-flex flex-column p-3 bg-white rounded-end-5"
-        style="position: fixed; top: 0; left: 0; width: 260px; min-height: 100vh; border-right: 1px solid #e5e7eb; z-index: 20;">
+        style="position: fixed; top: 0; left: 0; width: 260px; min-height: 100vh; border-right: 1px solid #e5e7eb; z-index: 10;">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
             <span class="fs-4 fw-semibold">🅱 BorrowMe</span>
         </a>
@@ -128,9 +128,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href=""
+                <a href="{{ route('activity-logs.index') }}"
                 class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('log-activity') ? 'active' : 'text-dark' }}">
+                {{ request()->is('activity-logs') ? 'active' : 'text-dark' }}">
                     <i class="bi bi-activity"></i>
                     Log Activity
                 </a>

@@ -177,4 +177,13 @@
         </div>
     </div>
 </div>
-@endsection
+
+<script>
+    function confirmDelete(categoryId) {
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = '/categories/' + categoryId;
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+        deleteModal.show();
+    }
+</script>
+@endsection 

@@ -6,18 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\ReturnItem;
 use App\Models\Loan;
 use App\Models\Item;
+use App\Models\ActivityLog;
 
 class ReturnController extends Controller
 {
     public function index() {
         $returns = ReturnItem::with('loan.item', 'loan.user')->get();
-        $loans = Loan::where('status', 'borrowed')->with('item', 'user')->get();
+        $loans = Loan::where('status', 'approved')->with('item', 'user', 'returnItem')->get();
         return view('returns.index', compact('returns', 'loans'));
     }
 
-    public function create() {
-        $loans = Loan::where('status', 'borrowed')->with('item', 'user')->get();
-        return view('returns.create', compact('loans'));
+    public function create(Request $request) {
+        $loans = Loan::where('status', 'submitted')->with('item', 'user')->get();
+        $selectedLoanId = $request->query('loan_id');
+        $selectedLoan = $selectedLoanId ? Loan::with('item', 'user')->find($selectedLoanId) : null;
+        return view('returns.create', compact('loans', 'selectedLoan'));
     }
 
     public function store(Request $request) {
@@ -25,13 +28,12 @@ class ReturnController extends Controller
             'loan_id' => 'required|exists:loans,id',
             'return_date' => 'required|date',
             'condition' => 'required|in:good,damaged,lost',
-            'fine' => 'required|integer|min:0',
         ]);
 
         $loan = Loan::findOrFail($request->loan_id);
 
-        if ($loan->status !== 'borrowed') {
-            return redirect()->back()->with(['error' => 'Loan status harus borrowed untuk mengembalikan!']);
+        if ($loan->status !== 'approved') {
+            return redirect()->back()->with(['error' => 'Loan status must be approved to return!']);
         }
 
         $returnData = [
@@ -39,8 +41,7 @@ class ReturnController extends Controller
             'staff_id' => auth()->id(),
             'return_date' => $request->return_date,
             'condition' => $request->condition,
-            'fine' => $request->fine,
-            'notes' => $request->input('notes', ''),
+            'notes' => $request->notes,
         ];
 
         $returnItem = ReturnItem::create($returnData);
@@ -49,8 +50,13 @@ class ReturnController extends Controller
         $item->available_quantity += $loan->quantity;
         $item->save();
 
-        $loan->status = 'returned';
+        $loan->status = 'waiting';
         $loan->save();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Created return for loan: ' . $loan->loan_code
+        ]);
 
         return redirect()->route('returns.index')->with(['success' => 'Item returned successfully!']);
     }
@@ -62,14 +68,17 @@ class ReturnController extends Controller
         $request->validate([
             'return_date' => 'required|date',
             'condition' => 'required|in:good,damaged,lost',
-            'fine' => 'required|integer|min:0',
         ]);
 
         $returnItem->update([
             'return_date' => $request->return_date,
             'condition' => $request->condition,
-            'fine' => $request->fine,
-            'notes' => $request->input('notes', ''),
+            'notes' => $request->notes,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated return for loan: ' . $loan->loan_code
         ]);
 
         return redirect()->route('returns.index')->with(['success' => 'Return item updated successfully!']);
@@ -86,7 +95,13 @@ class ReturnController extends Controller
         $loan->status = 'borrowed';
         $loan->save();
 
+        $loanCode = $loan->loan_code;
         $returnItem->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Deleted return for loan: ' . $loanCode
+        ]);
 
         return redirect()->route('returns.index')->with(['success' => 'Return item deleted successfully!']);
     }

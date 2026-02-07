@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,10 +28,15 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        User::create([
+        $user = User::create([
            'username' => $request->username,
            'email' => $request->email,
            'password' => Hash::make($request->password),
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'activity' => 'Registered a new account'
         ]);
 
         return redirect()->intended('/login')->with(['success' => 'Akun Berhasil Disimpan!']);
@@ -45,6 +51,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'activity' => 'Logged in'
+            ]);
+            
             return redirect()->route('dashboard');
         }
 
@@ -53,6 +65,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Logged out'
+        ]);
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

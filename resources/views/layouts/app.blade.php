@@ -145,6 +145,31 @@
         document.getElementById('loading').classList.remove('d-none');
         document.getElementById('loading').classList.add('d-flex');
     }
+
+    // Debug and fix dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Bootstrap version:', typeof bootstrap !== 'undefined' ? bootstrap.Dropdown.VERSION : 'Bootstrap not loaded');
+        
+        // Ensure all dropdowns are initialized
+        const dropdownElementList = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+        console.log('Found dropdowns:', dropdownElementList.length);
+        
+        if (typeof bootstrap !== 'undefined') {
+            dropdownElementList.forEach(function(dropdownToggleEl) {
+                try {
+                    new bootstrap.Dropdown(dropdownToggleEl);
+                    console.log('Dropdown initialized successfully');
+                } catch (e) {
+                    console.error('Error initializing dropdown:', e);
+                }
+            });
+        } else {
+            console.error('Bootstrap is not loaded!');
+        }
+    });
 </script>
+
+<!-- Bootstrap JS at the end for proper loading -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

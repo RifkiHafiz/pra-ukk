@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +40,12 @@ class UserController extends Controller
             $data['profile_picture'] = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
 
-        User::create($data);
+        $user = User::create($data);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Created user: ' . $user->username
+        ]);
 
         return redirect()->route('user.index')->with(['success' => 'User created successfully!']);
     }
@@ -76,12 +82,23 @@ class UserController extends Controller
 
         $user->update($data);
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated user: ' . $user->username
+        ]);
+
         return redirect()->route('user.index')->with(['success' => 'User updated successfully!']);
     }
 
     public function destroy($id) {
         $user = User::findOrFail($id);
+        $username = $user->username;
         $user->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Deleted user: ' . $username
+        ]);
 
         return redirect()->route('user.index')->with(['success' => 'User deleted successfully!']);
     }
@@ -115,6 +132,11 @@ class UserController extends Controller
         }
 
         $user->update($data);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated own profile'
+        ]);
 
         return redirect()->route('dashboard')->with(['success' => 'Profile updated successfully!']);
     }

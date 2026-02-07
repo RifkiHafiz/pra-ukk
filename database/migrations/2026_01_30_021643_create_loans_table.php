@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('loan_code');
             $table->foreignId('borrower_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('staff_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->integer('quantity');
             $table->date('loan_date');
             $table->date('return_date')->nullable();
-            $table->text('notes');
-            $table->enum('status', ['submitted', 'approved', 'borrowed', 'returned', 'rejected'])->default('submitted');
+            $table->text('notes')->nullable();
+            $table->enum('status', ['submitted', 'approved', 'waiting', 'returned', 'rejected'])->default('submitted');
             $table->timestamps();
         });
     }

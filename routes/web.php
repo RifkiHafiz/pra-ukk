@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\ActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,5 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('returns', ReturnController::class);
     Route::resource('loans', LoanController::class);
     Route::get('/loans/index-table', [LoanController::class, 'show'])->name('loans.index-table');
+    Route::post('/loans/{id}/approve', [LoanController::class, 'approve'])->name('loans.approve');
+    Route::post('/loans/{id}/complete', [LoanController::class, 'complete'])->name('loans.complete');
+    
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 

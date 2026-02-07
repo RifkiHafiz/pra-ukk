@@ -70,15 +70,9 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <h3 class="card-title fw-bold text-primary mb-0 fs-4">
-                        <i class="bi bi-people-fill me-2"></i>
-                        All Users
+                        <i class="bi bi-bag-plus-fill me-2"></i>
+                        All Loans to Return
                     </h3>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="{{ route('user.create') }}" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Add New User
-                    </a>
                 </div>
             </div>
         </div>
@@ -86,47 +80,50 @@
         <div class="card-body p-0">
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-hover mb-0" id="usersTable">
+                <table class="table table-hover mb-0" id="categoriesTable">
                     <thead>
                         <tr>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">No</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">User</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Username</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Role</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Phone Number</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Code</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Item</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Quantity</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Deadline</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Status</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($users as $user)
+                        @forelse ($loans as $loan)
                             <tr>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $loop->iteration }}</td>
+
+                                <td class="p-3 align-middle border-bottom border-light">{{ $loan->loan_code }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $loan->item->item_name }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $loan->quantity }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }} - <br> {{ \Carbon\Carbon::parse($loan->return_date)->format('d M Y') }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
-                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold me-2 user-avatar">
-                                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-avatar.svg') }}" alt="Profile"
-                                            class="rounded-circle object-fit-cover border border-white" width="35" height="35">
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <span class="d-block fw-semibold text-primary">{{ $user->full_name ?? 'No Name' }}</span>
-                                        <span class="d-block small text-secondary">{{ $user->email }}</span>
-                                    </div>
+                                    @if($loan->status === 'submitted')
+                                        <span class="badge bg-warning rounded-pill px-3 py-2">Submitted</span>
+                                    @elseif($loan->status === 'approved')
+                                        <span class="badge bg-success rounded-pill px-3 py-2">Approved</span>
+                                    @else
+                                        <span class="badge bg-info rounded-pill px-3 py-2">Returned</span>
+                                    @endif
                                 </td>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->username }}</td>
-                                <td class="p-3 align-middle border-bottom border-light">
-                                    <span class="badge bg-success rounded-2 fw-semibold px-3 py-2 small">{{ $user->role }}</span>
-                                </td>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->phone_number ?? '0812-3456-7890' }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex gap-2 justify-content-center">
-                                        <a href="{{ route('user.show', $user->id) }}" class="btn btn-info btn-sm text-white px-3 py-1">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete(1)" title="Delete">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        @if(!$loan->returnItem)
+                                            <a href="{{ route('returns.create', ['loan_id' => $loan->id]) }}" class="btn btn-primary btn-sm px-3 py-1">
+                                                <i class="bi bi-arrow-return-left me-1"></i> Return
+                                            </a>
+                                        @else
+                                            <a href="{{ route('returns.edit', $loan->returnItem->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1" title="Edit Return">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete({{ $loan->returnItem->id }})" title="Delete Return">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -135,7 +132,7 @@
                                 <td colspan="6" class="text-center py-5">
                                     <div class="text-muted">
                                         <i class="bi bi-inbox display-1 d-block mb-3 opacity-25"></i>
-                                        <h4 class="text-secondary mb-2">No Users Found</h4>
+                                        <h4 class="text-secondary mb-2">No Loans Found</h4>
                                     </div>
                                 </td>
                             </tr>
@@ -198,11 +195,12 @@
 </div>
 
 <script>
-    function confirmDelete(userId) {
+    // Confirm delete function
+    function confirmDelete(returnId) {
         const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = '/user/' + userId;
+        deleteForm.action = '/returns/' + returnId;
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
         deleteModal.show();
     }
-</script>   
+</script>
 @endsection

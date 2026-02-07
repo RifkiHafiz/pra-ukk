@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\ActivityLog;
 
 class ItemController extends Controller
 {
@@ -43,7 +44,12 @@ class ItemController extends Controller
             $data['item_image'] = $request->file('item_image')->store('items', 'public');
         }
 
-        Item::create($data);
+        $item = Item::create($data);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Created item: ' . $item->item_name
+        ]);
 
         return redirect()->route('items.index')->with(['success' => 'Item created successfully!']);
     }
@@ -82,12 +88,23 @@ class ItemController extends Controller
 
         $item->update($data);
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated item: ' . $item->item_name
+        ]);
+
         return redirect()->route('items.index')->with(['success' => 'Item updated successfully!']);
     }
 
     public function destroy($id) {
         $item = Item::findOrFail($id);
+        $itemName = $item->item_name;
         $item->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Deleted item: ' . $itemName
+        ]);
 
         return redirect()->route('items.index')->with(['success' => 'Item deleted successfully!']);
     }

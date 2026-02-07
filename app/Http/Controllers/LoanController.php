@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Loan;
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\ActivityLog;
 
 class LoanController extends Controller
 {
@@ -22,11 +23,13 @@ class LoanController extends Controller
         return view('loans.index-table', compact('loans', 'items', 'categories'));
     }
 
-    public function create() {
+    public function create(Request $request) {
         $items = Item::with('category')->get();
         $categories = Category::all();
         $loans = Loan::with('user', 'item')->get();
-        return view('loans.create', compact('loans', 'items', 'categories'));
+        $selectedItemId = $request->query('item_id');
+        $selectedItem = $selectedItemId ? Item::find($selectedItemId) : null;
+        return view('loans.create', compact('loans', 'items', 'categories', 'selectedItem'));
     }
 
     public function store(Request $request) {
@@ -57,7 +60,7 @@ class LoanController extends Controller
             'loan_date' => $request->loan_date,
             'return_date' => $request->return_date,
             'status' => 'submitted',
-            'notes' => $request->input('notes', ''),
+            'notes' => $request->notes,
         ];
 
         $loan = Loan::create($data);
@@ -65,8 +68,21 @@ class LoanController extends Controller
         $item->available_quantity -= $quantity;
         $item->save();
 
-        return redirect()->route('loans.index')->with(['success' => 'Loan created successfully!']);
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Created loan: ' . $loan->loan_code . ' for item ' . $item->item_name
+        ]);
+
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan created successfully!']);
     }
+
+    public function edit($id) {
+        $loan = Loan::with('item.category')->findOrFail($id);
+        $selectedItem = $loan->item;
+        $items = Item::with('category')->get();
+        $categories = Category::all();
+        return view('loans.edit', compact('loan', 'items', 'categories', 'selectedItem'));
+    }   
 
     public function update(Request $request, $id) {
         $loan = Loan::findOrFail($id);
@@ -76,7 +92,6 @@ class LoanController extends Controller
             'quantity' => 'required|integer|min:1',
             'loan_date' => 'required|date',
             'return_date' => 'required|date|after_or_equal:loan_date',
-            'status' => 'required|string',
         ]);
 
         $item = Item::findOrFail($request->item_id);
@@ -85,7 +100,7 @@ class LoanController extends Controller
         $quantityDifference = $newQuantity - $oldQuantity;
 
         if ($quantityDifference > 0 && $item->available_quantity < $quantityDifference) {
-            return redirect()->back()->with(['error' => 'Quantity tidak tersedia! Available: ' . $item->available_quantity]);
+            return redirect()->back()->with(['error' => 'Quantity not available! Available: ' . $item->available_quantity]);
         }
 
         $loan->update([
@@ -93,8 +108,8 @@ class LoanController extends Controller
             'quantity' => $newQuantity,
             'loan_date' => $request->loan_date,
             'return_date' => $request->return_date,
-            'status' => $request->status,
-            'notes' => $request->input('notes', ''),
+            'status' => 'submitted',
+            'notes' => $request->notes,
         ]);
 
         if ($quantityDifference != 0) {
@@ -102,22 +117,70 @@ class LoanController extends Controller
             $item->save();
         }
 
-        return redirect()->route('loans.index')->with(['success' => 'Loan updated successfully!']);
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Updated loan: ' . $loan->loan_code
+        ]);
+
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan updated successfully!']);
+    }
+
+    public function approve($id) {
+        $loan = Loan::findOrFail($id);
+        
+        if ($loan->status !== 'submitted') {
+            return redirect()->back()->with(['error' => 'Only submitted loans can be approved!']);
+        }
+        
+        $loan->status = 'approved';
+        $loan->staff_id = auth()->id();
+        $loan->save();
+        
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Approved loan: ' . $loan->loan_code
+        ]);
+        
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan approved successfully!']);
+    }
+    
+    public function complete($id) {
+        $loan = Loan::findOrFail($id);
+        
+        if ($loan->status !== 'waiting') {
+            return redirect()->back()->with(['error' => 'Only waiting loans can be completed!']);
+        }
+        
+        $loan->status = 'returned';
+        $loan->save();
+        
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Completed loan: ' . $loan->loan_code
+        ]);
+        
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan completed successfully!']);
     }
 
     public function destroy($id) {
         $loan = Loan::findOrFail($id);
 
         if ($loan->status !== 'submitted') {
-            return redirect()->back()->with(['error' => 'Hanya loan dengan status submitted yang bisa dihapus!']);
+            return redirect()->back()->with(['error' => 'Only loan with status submitted can be deleted!']);
         }
 
         $item = $loan->item;
         $item->available_quantity += $loan->quantity;
         $item->save();
 
+        $loanCode = $loan->loan_code;
         $loan->delete();
 
-        return redirect()->route('loans.index')->with(['success' => 'Loan deleted successfully!']);
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => 'Deleted loan: ' . $loanCode
+        ]);
+
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan deleted successfully!']);
     }
 }
