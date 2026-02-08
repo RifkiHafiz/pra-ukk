@@ -76,7 +76,8 @@
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="user-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 35px; height: 35px; background: linear-gradient(135deg, #0ea5e9, #0369a1);">
-                                            {{ strtoupper(substr($log->user->username ?? 'U', 0, 1)) }}
+                                            <img src="{{ $log->user->profile_picture ? asset('storage/' . $log->user->profile_picture) : asset('storage/img/user-default.jpg') }}" alt="Profile"
+                                            class="rounded-circle object-fit-cover border border-white" width="35" height="35">
                                         </div>
                                         <span>{{ $log->user->username ?? 'Unknown User' }}</span>
                                     </div>
@@ -102,25 +103,11 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Page navigation" class="p-3">
-                <ul class="pagination justify-content-end mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link bg-primary border-primary rounded-2 px-3 py-2 mx-1" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            @if($activityLogs->hasPages())
+                <div class="p-3">
+                    {{ $activityLogs->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

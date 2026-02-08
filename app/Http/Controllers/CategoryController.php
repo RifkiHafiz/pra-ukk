@@ -9,7 +9,7 @@ use App\Models\ActivityLog;
 class CategoryController extends Controller
 {
     public function index() {
-        $categories = Category::all();
+        $categories = Category::paginate(10);
         return view('categories.index', compact('categories'));
     }
 

@@ -126,25 +126,11 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Page navigation" class="p-3">
-                <ul class="pagination justify-content-end mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link bg-primary border-primary rounded-2 px-3 py-2 mx-1" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            @if($categories->hasPages())
+                <div class="p-3">
+                    {{ $categories->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

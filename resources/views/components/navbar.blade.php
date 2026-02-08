@@ -21,7 +21,7 @@
                                 <img
                                     src="{{ auth()->user()->profile_picture
                                         ? asset('storage/' . auth()->user()->profile_picture)
-                                        : asset('images/default-avatar.svg') }}"
+                                        : asset('storage/img/user-default.jpg') }}"
                                     alt="Profile"
                                     class="rounded-circle border border-white"
                                     width="35"

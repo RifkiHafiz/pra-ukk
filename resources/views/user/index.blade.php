@@ -103,7 +103,7 @@
                                 <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold me-2 user-avatar">
-                                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-avatar.svg') }}" alt="Profile"
+                                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('storage/img/user-default.jpg') }}" alt="Profile"
                                             class="rounded-circle object-fit-cover border border-white" width="35" height="35">
                                     </div>
                                     <div class="d-inline-block align-middle">
@@ -145,25 +145,11 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Page navigation" class="p-3">
-                <ul class="pagination justify-content-end mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link bg-primary border-primary rounded-2 px-3 py-2 mx-1" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-primary border border-light rounded-2 px-3 py-2 mx-1" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            @if($users->hasPages())
+                <div class="p-3">
+                    {{ $users->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
     </div>
 </div>

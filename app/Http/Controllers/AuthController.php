@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function index() {
-        return view('dashboard');
-    }
     public function ShowRegister() {
         return view('auth.register');
     }
@@ -39,7 +36,7 @@ class AuthController extends Controller
             'activity' => 'Registered a new account'
         ]);
 
-        return redirect()->intended('/login')->with(['success' => 'Akun Berhasil Disimpan!']);
+        return redirect()->intended('/login')->with(['success' => 'Account Registered Successfully!']);
     }
 
     public function login(Request $request)
@@ -60,7 +57,7 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return view('dashboard')->withErrors(['email' => 'Email atau Password Salah!']);
+        return view('dashboard')->withErrors(['email' => 'Email or Password Incorrect!']);
     }
 
     public function logout(Request $request)

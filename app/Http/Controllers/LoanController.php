@@ -11,15 +11,15 @@ use App\Models\ActivityLog;
 class LoanController extends Controller
 {
     public function index() {
-        $items = Item::with('category')->get();
+        $items = Item::with('category')->paginate(10);
         $categories = Category::all();
-        $loans = Loan::with('user', 'item')->get();
+        $loans = Loan::with('user', 'item')->paginate(10);
         return view('loans.index', compact('loans', 'items', 'categories'));
     }
     public function show() {
-        $items = Item::with('category')->get();
+        $items = Item::with('category')->paginate(10);
         $categories = Category::all();
-        $loans = Loan::with('user', 'item')->get();
+        $loans = Loan::with('user', 'item')->paginate(10);
         return view('loans.index-table', compact('loans', 'items', 'categories'));
     }
 
@@ -47,7 +47,6 @@ class LoanController extends Controller
             return redirect()->back()->with(['error' => 'Quantity tidak tersedia! Available: ' . $item->available_quantity]);
         }
 
-        // Generate loan_code
         $lastLoan = Loan::orderBy('id', 'desc')->first();
         $nextNumber = ($lastLoan ? $lastLoan->id : 0) + 1;
         $loanCode = 'L' . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);

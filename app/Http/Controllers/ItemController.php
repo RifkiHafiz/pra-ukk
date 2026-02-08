@@ -10,9 +10,15 @@ use App\Models\ActivityLog;
 class ItemController extends Controller
 {
     public function index() {
-        $items = Item::with('category')->get();
+        $items = Item::with('category')->paginate(10);
         $categories = Category::all();
         return view('items.index', compact('items', 'categories'));
+    }
+
+    public function show($id) {
+        $item = Item::findOrFail($id);
+        $categories = Category::all();
+        return view('items.detail', compact('item', 'categories'));
     }
 
     public function create() {

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function index() {
-        $users = User::all();
+        $users = User::paginate(10);
         return view('user.index', compact('users'));
     }
 
