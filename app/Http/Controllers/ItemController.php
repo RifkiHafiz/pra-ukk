@@ -10,7 +10,7 @@ use App\Models\ActivityLog;
 class ItemController extends Controller
 {
     public function index() {
-        $items = Item::with('category')->paginate(10);
+        $items = Item::with('category')->paginate(9);
         $categories = Category::all();
         return view('items.index', compact('items', 'categories'));
     }

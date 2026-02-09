@@ -11,9 +11,9 @@ use App\Models\ActivityLog;
 class LoanController extends Controller
 {
     public function index() {
-        $items = Item::with('category')->paginate(10);
+        $items = Item::with('category')->paginate(9);
         $categories = Category::all();
-        $loans = Loan::with('user', 'item')->paginate(10);
+        $loans = Loan::with('user', 'item')->paginate(9);
         return view('loans.index', compact('loans', 'items', 'categories'));
     }
     public function show() {
