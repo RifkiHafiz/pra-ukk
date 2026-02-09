@@ -49,7 +49,7 @@
 <div class="container-fluid">
     <!-- Success/Error Messages -->
     @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show border-0 rounded-3" role="alert">
+    <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
         <i class="bi bi-check-circle me-2"></i>
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -57,7 +57,7 @@
     @endif
 
     @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
         <i class="bi bi-exclamation-circle me-2"></i>
         {{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -102,13 +102,15 @@
                             <tr>
                                 <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
-                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold me-2 user-avatar">
-                                        <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('storage/img/user-default.jpg') }}" alt="Profile"
-                                            class="rounded-circle object-fit-cover border border-white" width="35" height="35">
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <span class="d-block fw-semibold text-primary">{{ $user->full_name ?? 'No Name' }}</span>
-                                        <span class="d-block small text-secondary">{{ $user->email }}</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="flex-shrink-0">
+                                            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('storage/img/user-default.jpg') }}" alt="Profile"
+                                                class="rounded-circle object-fit-cover border border-white" width="40" height="40">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <span class="d-block fw-semibold text-primary">{{ $user->full_name ?? 'No Name' }}</span>
+                                            <span class="d-block small text-secondary">{{ $user->email }}</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="p-3 align-middle border-bottom border-light">{{ $user->username }}</td>

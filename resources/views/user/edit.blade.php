@@ -162,9 +162,9 @@
                             </label>
                             <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
                                 <option value="">Select Role</option>
-                                <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="borrower" {{ old('role', $user->role) == 'borrower' ? 'selected' : '' }}>Borrower</option>
-                                <option value="lender" {{ old('role', $user->role) == 'lender' ? 'selected' : '' }}>Lender</option>
+                                <option value="Admin" {{ old('role', $user->role) == 'Admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="Staff" {{ old('role', $user->role) == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                <option value="Borrower" {{ old('role', $user->role) == 'Borrower' ? 'selected' : '' }}>Borrower</option>
                             </select>
                             @error('role')
                                 <div class="invalid-feedback">{{ $message }}</div>

@@ -12,7 +12,7 @@ class ReturnController extends Controller
 {
     public function index() {
         $returns = ReturnItem::with('loan.item', 'loan.user')->paginate(10);
-        $loans = Loan::where('status', 'approved')->with('item', 'user', 'returnItem')->get();
+        $loans = Loan::whereIn('status', ['approved', 'waiting'])->with('item', 'user', 'returnItem')->get();
         return view('returns.index', compact('returns', 'loans'));
     }
 
@@ -92,7 +92,7 @@ class ReturnController extends Controller
         $item->available_quantity -= $loan->quantity;
         $item->save();
 
-        $loan->status = 'borrowed';
+        $loan->status = 'approved';
         $loan->save();
 
         $loanCode = $loan->loan_code;

@@ -25,7 +25,7 @@ class DashboardController extends Controller
         
         $recentActivities = ActivityLog::with('user')
             ->orderBy('created_at', 'desc')
-            ->limit(5)
+            ->limit(2)
             ->get();
         
         return view('dashboard', compact(

@@ -38,7 +38,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-pencil-square me-2"></i>
-                Edit Item
+                Detail Item
             </h3>
             <a href="{{ route('items.index') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>
@@ -71,7 +71,7 @@
                             <i class="bi bi-cloud-upload display-4 text-primary d-block mb-3"></i>
                             <p class="fw-semibold text-dark mb-1">Click to upload item image</p>
                             <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
-                            <input type="file" id="item_image" name="item_image" accept="image/*" class="d-none" onchange="previewImage(event)" readonly>
+                            <input type="file" id="item_image" name="item_image" accept="image/*" class="d-none" onchange="previewImage(event)" disabled>
                             @if($item->item_image)
                                 <img id="preview" class="img-thumbnail mt-3" style="max-width: 200px;" src="{{ asset('storage/' . $item->item_image) }}" alt="Preview">
                             @else
@@ -87,7 +87,7 @@
                             </label>
                             <input type="text" class="form-control @error('item_code') is-invalid @enderror"
                                    id="item_code" name="item_code" value="{{ old('item_code', $item->item_code) }}"
-                                   placeholder="Enter item code" readonly>
+                                   placeholder="Enter item code" disabled>
                             @error('item_code')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -101,7 +101,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control border-start-0 @error('item_name') is-invalid @enderror"
                                        id="item_name" name="item_name" value="{{ old('item_name', $item->item_name) }}"
-                                       placeholder="Enter item name" readonly>
+                                       placeholder="Enter item name" disabled>
                                 @error('item_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -115,7 +115,7 @@
                                 Category <span class="text-danger">*</span>
                             </label>
                             <select class="form-select @error('category_id') is-invalid @enderror"
-                                    id="category_id" name="category_id" readonly>
+                                    id="category_id" name="category_id" disabled>
                                 <option value="">Select a category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $item->category_id) == $category->id ? 'selected' : '' }}>
@@ -134,7 +134,7 @@
                             </label>
                             <input type="number" class="form-control @error('total_quantity') is-invalid @enderror"
                                    id="total_quantity" name="total_quantity" value="{{ old('total_quantity', $item->total_quantity) }}"
-                                   placeholder="Enter total quantity" readonly>
+                                   placeholder="Enter total quantity" disabled>
                             @error('total_quantity')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -147,7 +147,7 @@
                             </label>
                             <input type="number" class="form-control @error('available_quantity') is-invalid @enderror"
                                    id="available_quantity" name="available_quantity" value="{{ old('available_quantity', $item->available_quantity) }}"
-                                   placeholder="Enter available quantity" readonly>
+                                   placeholder="Enter available quantity" disabled>
                             @error('available_quantity')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -157,7 +157,7 @@
                             <label for="condition" class="form-label fw-semibold text-primary">
                                 Condition <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select @error('condition') is-invalid @enderror" id="condition" name="condition" readonly>
+                            <select class="form-select @error('condition') is-invalid @enderror" id="condition" name="condition" disabled>
                                 <option value="">Select Condition</option>
                                 <option value="Good" {{ old('condition', $item->condition) == 'Good' ? 'selected' : '' }}>Good</option>
                                 <option value="Damaged" {{ old('condition', $item->condition) == 'Damaged' ? 'selected' : '' }}>Damaged</option>
@@ -174,10 +174,6 @@
                             <i class="bi bi-x-circle me-2"></i>
                             Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="bi bi-check-circle me-2"></i>
-                            Update Item
-                        </button>
                     </div>
                 </form>
             </div>

@@ -68,7 +68,11 @@
                             <p class="fw-semibold text-dark mb-1">Click to upload profile picture</p>
                             <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
                             <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="d-none" onchange="previewImage(event)">
-                            <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
+                            @if($user->profile_picture)
+                                <img id="preview" class="img-thumbnail mt-3" style="max-width: 200px;" src="{{ asset('storage/' . $user->profile_picture) }}" alt="Preview">
+                            @else
+                                <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
+                            @endif
                         </div>
                         <div class="form-text">Optional: Upload a profile picture for this user</div>
                     </div>

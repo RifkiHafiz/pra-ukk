@@ -49,7 +49,7 @@
 <div class="container-fluid">
     <!-- Success/Error Messages -->
     @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show border-0 rounded-3" role="alert">
+    <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
         <i class="bi bi-check-circle me-2"></i>
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -57,7 +57,7 @@
     @endif
 
     @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
         <i class="bi bi-exclamation-circle me-2"></i>
         {{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -106,8 +106,10 @@
                                         <span class="badge bg-warning rounded-pill px-3 py-2">Submitted</span>
                                     @elseif($loan->status === 'approved')
                                         <span class="badge bg-success rounded-pill px-3 py-2">Approved</span>
-                                    @else
-                                        <span class="badge bg-info rounded-pill px-3 py-2">Returned</span>
+                                    @elseif($loan->status === 'waiting')
+                                        <span class="badge bg-info rounded-pill px-3 py-2">Waiting</span>
+                                    @elseif($loan->status === 'returned')
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">Returned</span>
                                     @endif
                                 </td>
                                 <td class="p-3 align-middle border-bottom border-light">
