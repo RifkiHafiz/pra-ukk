@@ -26,7 +26,6 @@
             color: var(--gray-800);
         }
 
-        /* Navbar */
         .navbar {
             background: white;
             box-shadow: 0 2px 10px rgba(14, 165, 233, 0.1);
@@ -37,6 +36,14 @@
             font-weight: 800;
             font-size: 1.8rem;
             color: var(--primary-blue) !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand img {
+            height: 45px;
+            width: auto;
         }
 
         .navbar-brand span {
@@ -85,7 +92,6 @@
             opacity: 0.9;
         }
 
-        /* Hero Section */
         .hero-section {
             min-height: 85vh;
             display: flex;
@@ -169,7 +175,6 @@
             margin-bottom: 60px;
         }
 
-        /* How It Works Section */
         .how-section {
             padding: 80px 0;
             background: var(--ultra-light-blue);
@@ -210,7 +215,6 @@
             line-height: 1.7;
         }
 
-        /* CTA Section */
         .cta-section {
             padding: 80px 0;
             background: linear-gradient(135deg, var(--primary-blue), var(--blue-700));
@@ -246,59 +250,47 @@
             opacity: 0.95;
         }
 
-        /* Footer */
         .footer {
             background: var(--blue-900);
             color: white;
-            padding: 60px 0 30px;
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 25px;
         }
 
         .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 1.8rem;
             font-weight: 800;
-            margin-bottom: 15px;
+        }
+
+        .footer-brand img {
+            height: 40px;
+            width: auto;
         }
 
         .footer-description {
-            opacity: 0.8;
-            margin-bottom: 25px;
+            opacity: 0.9;
+            max-width: 600px;
             line-height: 1.7;
-        }
-
-        .footer-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--light-blue);
         }
 
         .social-links {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
         }
 
         .social-link {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
@@ -307,21 +299,22 @@
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
 
         .social-link:hover {
             background: var(--primary-blue);
+            transform: translateY(-3px);
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 50px;
+            margin-top: 35px;
             padding-top: 25px;
             text-align: center;
             opacity: 0.8;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.2rem;
@@ -339,21 +332,29 @@
                 margin-left: 0;
                 margin-top: 10px;
             }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .navbar-brand img {
+                height: 35px;
+            }
         }
     </style>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href=""><span>Borrow</span>Me</a>
+            <a class="navbar-brand" href="">
+                <img src="{{ asset('storage/img/logo-BorrowMe.png') }}" alt="BorrowMe Logo">
+                <div><span>Borrow</span>Me</div>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#features">Features</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#how-it-works">How It Works</a>
                     </li>
@@ -489,61 +490,32 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer - Simplified -->
     <footer class="footer" id="about">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h3 class="footer-brand">BorrowMe</h3>
-                    <p class="footer-description">
-                        The smart way to manage equipment borrowing. Simplifying access to tools and resources for everyone.
-                    </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
-                    </div>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="{{ asset('storage/img/logo-BorrowMe.png') }}" alt="BorrowMe Logo">
+                    BorrowMe
                 </div>
-
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h4 class="footer-title">Product</h4>
-                    <ul class="footer-links">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h4 class="footer-title">Company</h4>
-                    <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h4 class="footer-title">Support</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Community</a></li>
-                        <li><a href="#">Status</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h4 class="footer-title">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">Licenses</a></li>
-                    </ul>
+                
+                <p class="footer-description">
+                    The smart way to manage equipment borrowing. Simplifying access to tools and resources for everyone.
+                </p>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Twitter">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link" aria-label="LinkedIn">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
                 </div>
             </div>
 

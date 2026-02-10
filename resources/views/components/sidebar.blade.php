@@ -1,5 +1,34 @@
 <div>
 <style>
+    .navbar-brand {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: #0ea5e9 !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .navbar-brand img {
+        height: 40px;
+        width: auto;
+    }
+
+    .navbar-brand div {
+        display: flex;
+    }
+
+    .navbar-brand span {
+        color: #0369a1;
+    }
+
+    .navbar-brand:hover {
+        opacity: 0.8;
+        transform: scale(1.02);
+        transition: all 0.2s ease;
+    }
+    
     .collapse {
         transition: height 0.3s ease;
     }
@@ -28,8 +57,9 @@
 </style>
     <div class="d-flex flex-column p-3 bg-white rounded-end-5"
         style="position: fixed; top: 0; left: 0; width: 260px; min-height: 100vh; border-right: 1px solid #e5e7eb; z-index: 10;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-decoration-none">
-            <span class="fs-4 fw-semibold">🅱 BorrowMe</span>
+        <a class="navbar-brand" href="">
+            <img src="{{ asset('storage/img/logo-BorrowMe.png') }}" alt="BorrowMe Logo">
+            <div><span>Borrow</span>Me</div>
         </a>
 
         <hr>
