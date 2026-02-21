@@ -89,7 +89,9 @@
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Quantity</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Deadline</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Status</th>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase text-center">Actions</th>
+                            @if (Auth::user()->role !== 'Staff')
+                                <th class="text-primary fw-semibold border-0 p-3 small text-uppercase text-center">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -114,17 +116,19 @@
                                 </td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex gap-2 justify-content-center">
-                                        @if(!$loan->returnItem)
-                                            <a href="{{ route('returns.create', ['loan_id' => $loan->id]) }}" class="btn btn-primary btn-sm px-3 py-1">
-                                                <i class="bi bi-arrow-return-left me-1"></i> Return
-                                            </a>
-                                        @else
-                                            <a href="{{ route('returns.edit', $loan->returnItem->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1" title="Edit Return">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete({{ $loan->returnItem->id }})" title="Delete Return">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                        @if (Auth::user()->role !== 'Staff')
+                                            @if(!$loan->returnItem)
+                                                <a href="{{ route('returns.create', ['loan_id' => $loan->id]) }}" class="btn btn-primary btn-sm px-3 py-1">
+                                                    <i class="bi bi-arrow-return-left me-1"></i> Return
+                                                </a>
+                                            @else
+                                                <a href="{{ route('returns.edit', $loan->returnItem->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1" title="Edit Return">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <button class="btn btn-danger btn-sm px-3 py-1" onclick="confirmDelete({{ $loan->returnItem->id }})" title="Delete Return">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            @endif
                                         @endif
                                     </div>
                                 </td>

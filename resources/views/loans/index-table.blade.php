@@ -116,34 +116,37 @@
                                 </td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex flex-column gap-2">
-                                        {{-- Approve button for submitted loans --}}
-                                        @if($loan->status === 'submitted')
-                                            <form action="{{ route('loans.approve', $loan->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm w-100 px-3 py-1" title="Approve Loan">
-                                                    <i class="bi bi-check-circle me-1"></i> Approve
-                                                </button>
-                                            </form>
+                                        @if (Auth::user()->role !== 'Borrower')
+                                            @if($loan->status === 'submitted')
+                                                <form action="{{ route('loans.approve', $loan->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm w-100 px-3 py-1" title="Approve Loan">
+                                                        <i class="bi bi-check-circle me-1"></i> Approve
+                                                    </button>
+                                                </form>
+                                            @endif
+
+                                            @if($loan->status === 'waiting')
+                                                <form action="{{ route('loans.complete', $loan->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-info btn-sm w-100 px-3 py-1 text-white" title="Complete Loan">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> Complete
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @endif
-                                        
-                                        {{-- Complete button for waiting loans --}}
-                                        @if($loan->status === 'waiting')
-                                            <form action="{{ route('loans.complete', $loan->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-info btn-sm w-100 px-3 py-1 text-white" title="Complete Loan">
-                                                    <i class="bi bi-check-circle-fill me-1"></i> Complete
-                                                </button>
-                                            </form>
-                                        @endif
-                                        
-                                        {{-- Edit and Delete buttons (always visible) --}}
+
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('loans.edit', $loan->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1 flex-fill">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <button class="btn btn-danger btn-sm px-3 py-1 flex-fill" onclick="confirmDelete({{ $loan->id }})" title="Delete">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                            @if ($loan->status === 'submitted')
+                                                @if (Auth::user()->role !== 'Staff')
+                                                    <a href="{{ route('loans.edit', $loan->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1 flex-fill">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-sm px-3 py-1 flex-fill" onclick="confirmDelete({{ $loan->id }})" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                @endif
+                                            @endif
                                         </div>
                                     </div>
                                 </td>

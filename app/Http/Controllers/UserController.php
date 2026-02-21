@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public function index() {
+        if (Auth::user()->role !== 'Admin') {
+            abort(403, 'Unauthorized action.');
+        }
         $users = User::paginate(10);
         return view('user.index', compact('users'));
     }

@@ -28,7 +28,7 @@
         transform: scale(1.02);
         transition: all 0.2s ease;
     }
-    
+
     .collapse {
         transition: height 0.3s ease;
     }
@@ -88,22 +88,24 @@
                 </a>
                 <div class="collapse {{ request()->is('loans*') || request()->is('manage*') ? 'show' : '' }}" id="loansMenu">
                     <ul class="nav flex-column ms-3 mt-1 gap-1">
+                        @if (Auth::user()->role !== 'Staff')
+                            <li class="nav-item">
+                                <a href="{{ route('loans.index') }}"
+                                    class="nav-link d-flex align-items-center gap-2 py-2
+                                    {{ request()->is('loans') ? 'active' : 'text-dark' }}">
+                                    <i class="bi bi-plus-circle"></i>
+                                    Borrow Item
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
-                            <a href="{{ route('loans.index') }}"
+                            <a href="{{ route('loans.index-table') }}"
                             class="nav-link d-flex align-items-center gap-2 py-2
-                            {{ request()->is('loans') ? 'active' : 'text-dark' }}">
-                            <i class="bi bi-plus-circle"></i>
-                            Borrow Item
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('loans.index-table') }}"
-                           class="nav-link d-flex align-items-center gap-2 py-2
-                           {{ request()->is('loans/index-table') ? 'active' : 'text-dark' }}">
-                            <i class="bi bi-list-ul"></i>
-                            Manage Loans
-                        </a>
-                    </li>
+                            {{ request()->is('loans/index-table') ? 'active' : 'text-dark' }}">
+                                <i class="bi bi-list-ul"></i>
+                                Manage Loans
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -115,56 +117,62 @@
                     Returns
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center justify-content-between gap-2 text-dark"
-                   data-bs-toggle="collapse"
-                   href="#itemsMenu"
-                   role="button"
-                   aria-expanded="{{ request()->is('items*') || request()->is('categories*') ? 'true' : 'false' }}"
-                   aria-controls="itemsMenu">
-                    <span class="d-flex align-items-center gap-2">
-                        <i class="bi bi-tools"></i>
-                        Items
-                    </span>
-                    <i class="bi bi-chevron-down"></i>
-                </a>
-                <div class="collapse {{ request()->is('items*') || request()->is('categories*') ? 'show' : '' }}" id="itemsMenu">
-                    <ul class="nav flex-column ms-3 mt-1 gap-1">
-                        <li class="nav-item">
-                            <a href="{{ route('items.index') }}"
-                               class="nav-link d-flex align-items-center gap-2 py-2
-                               {{ request()->is('items') ? 'active' : 'text-dark' }}">
-                                <i class="bi bi-box-seam"></i>
-                                Manage Items
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('categories.index') }}"
-                               class="nav-link d-flex align-items-center gap-2 py-2
-                               {{ request()->is('categories') ? 'active' : 'text-dark' }}">
-                                <i class="bi bi-card-checklist"></i>
-                                Item Categories
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('user.index') }}"
-                class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('user') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-person-circle"></i>
-                    Users
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('activity-logs.index') }}"
-                class="nav-link d-flex align-items-center gap-2
-                {{ request()->is('activity-logs') ? 'active' : 'text-dark' }}">
-                    <i class="bi bi-activity"></i>
-                    Log Activity
-                </a>
-            </li>
+            @if (Auth::user()->role === 'Admin')
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center justify-content-between gap-2 text-dark"
+                    data-bs-toggle="collapse"
+                    href="#itemsMenu"
+                    role="button"
+                    aria-expanded="{{ request()->is('items*') || request()->is('categories*') ? 'true' : 'false' }}"
+                    aria-controls="itemsMenu">
+                        <span class="d-flex align-items-center gap-2">
+                            <i class="bi bi-tools"></i>
+                            Items
+                        </span>
+                        <i class="bi bi-chevron-down"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('items*') || request()->is('categories*') ? 'show' : '' }}" id="itemsMenu">
+                        <ul class="nav flex-column ms-3 mt-1 gap-1">
+                            <li class="nav-item">
+                                <a href="{{ route('items.index') }}"
+                                class="nav-link d-flex align-items-center gap-2 py-2
+                                {{ request()->is('items') ? 'active' : 'text-dark' }}">
+                                    <i class="bi bi-box-seam"></i>
+                                    Manage Items
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('categories.index') }}"
+                                class="nav-link d-flex align-items-center gap-2 py-2
+                                {{ request()->is('categories') ? 'active' : 'text-dark' }}">
+                                    <i class="bi bi-card-checklist"></i>
+                                    Item Categories
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            @endif
+            @if(Auth::user()->role === 'Admin')
+                <li class="nav-item">
+                    <a href="{{ route('user.index') }}"
+                    class="nav-link d-flex align-items-center gap-2
+                    {{ request()->is('user') ? 'active' : 'text-dark' }}">
+                        <i class="bi bi-person-circle"></i>
+                        Users
+                    </a>
+                </li>
+            @endif
+            @if (Auth::user()->role === 'Admin')
+                <li class="nav-item">
+                    <a href="{{ route('activity-logs.index') }}"
+                    class="nav-link d-flex align-items-center gap-2
+                    {{ request()->is('activity-logs') ? 'active' : 'text-dark' }}">
+                        <i class="bi bi-activity"></i>
+                        Log Activity
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </div>

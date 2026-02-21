@@ -61,6 +61,13 @@ class ReturnController extends Controller
         return redirect()->route('returns.index')->with(['success' => 'Item returned successfully!']);
     }
 
+    public function edit($id) {
+        $loans = Loan::where('status', 'waiting')->with('item', 'user')->findOrFail($id);
+        $selectedLoanId = $id->query('loan_id');
+        $selectedLoan = $selectedLoanId ? Loan::with('item', 'user')->find($selectedLoanId) : null;
+        return view('returns.edit', compact('loans', 'selectedLoan'));
+    }
+
     public function update(Request $request, $id) {
         $returnItem = ReturnItem::findOrFail($id);
         $loan = $returnItem->loan;

@@ -6,28 +6,28 @@
         transition: all 0.3s ease;
         border-left: 4px solid transparent;
     }
-    
+
     .stat-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
     }
-    
+
     .stat-card.primary {
         border-left-color: #0ea5e9;
     }
-    
+
     .stat-card.success {
         border-left-color: #10b981;
     }
-    
+
     .stat-card.warning {
         border-left-color: #f59e0b;
     }
-    
+
     .stat-card.danger {
         border-left-color: #ef4444;
     }
-    
+
     .stat-icon {
         width: 60px;
         height: 60px;
@@ -37,11 +37,11 @@
         border-radius: 12px;
         font-size: 28px;
     }
-    
+
     .activity-item {
         transition: background-color 0.2s ease;
     }
-    
+
     .activity-item:hover {
         background-color: #f8fafc;
     }
@@ -189,16 +189,18 @@
                                 <i class="bi bi-activity me-2 text-primary"></i>
                                 Recent Activities
                             </h5>
-                            <a href="{{ route('activity-logs.index') }}" class="btn btn-sm btn-outline-primary rounded-3">
-                                View All
-                            </a>
+                            @if (Auth::user()->role === 'Admin')
+                                <a href="{{ route('activity-logs.index') }}" class="btn btn-sm btn-outline-primary rounded-3">
+                                    View All
+                                </a>
+                            @endif
                         </div>
                         <div class="activity-list">
                             @forelse($recentActivities as $activity)
                                 <div class="activity-item p-3 rounded-3 mb-2">
                                     <div class="d-flex align-items-start">
                                         <div class="flex-shrink-0 me-3">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" 
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
                                                  style="width: 40px; height: 40px; background: linear-gradient(135deg, #0ea5e9, #0369a1);">
                                                 {{ strtoupper(substr($activity->user->username ?? 'U', 0, 1)) }}
                                             </div>
@@ -234,19 +236,23 @@
                             <i class="bi bi-lightning-fill me-2 text-primary"></i>
                             Quick Actions
                         </h5>
-                        <div class="row g-3">
-                            <div class="col-6 col-md-3">
-                                <a href="{{ route('loans.index') }}" class="btn btn-outline-primary w-100 py-3 rounded-3">
-                                    <i class="bi bi-plus-circle d-block mb-2" style="font-size: 24px;"></i>
-                                    <span class="small">New Loan</span>
-                                </a>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <a href="{{ route('items.create') }}" class="btn btn-outline-success w-100 py-3 rounded-3">
-                                    <i class="bi bi-box-seam d-block mb-2" style="font-size: 24px;"></i>
-                                    <span class="small">Add Item</span>
-                                </a>
-                            </div>
+                        <div class="row g-3 justify-content-center">
+                            @if (Auth::user()->role !== 'Staff')
+                                <div class="col-6 col-md-3">
+                                    <a href="{{ route('loans.index') }}" class="btn btn-outline-primary w-100 py-3 rounded-3">
+                                        <i class="bi bi-plus-circle d-block mb-2" style="font-size: 24px;"></i>
+                                        <span class="small">New Loan</span>
+                                    </a>
+                                </div>
+                                @if (Auth::user()->role === 'Admin')
+                                    <div class="col-6 col-md-3">
+                                        <a href="{{ route('items.create') }}" class="btn btn-outline-success w-100 py-3 rounded-3">
+                                            <i class="bi bi-box-seam d-block mb-2" style="font-size: 24px;"></i>
+                                            <span class="small">Add Item</span>
+                                        </a>
+                                    </div>
+                                @endif
+                            @endif
                             <div class="col-6 col-md-3">
                                 <a href="{{ route('loans.index-table') }}" class="btn btn-outline-warning w-100 py-3 rounded-3">
                                     <i class="bi bi-list-check d-block mb-2" style="font-size: 24px;"></i>

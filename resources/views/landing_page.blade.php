@@ -520,7 +520,7 @@
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2026 BorrowMe. All rights reserved. Made with <i class="bi bi-heart-fill" style="color: #ef4444;"></i> in Indonesia</p>
+                <p>&copy; 2026 BorrowMe. All rights reserved. Made in Indonesia</p>
             </div>
         </div>
     </footer>

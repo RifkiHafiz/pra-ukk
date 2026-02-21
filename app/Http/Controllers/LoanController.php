@@ -16,6 +16,7 @@ class LoanController extends Controller
         $loans = Loan::with('user', 'item')->paginate(9);
         return view('loans.index', compact('loans', 'items', 'categories'));
     }
+    
     public function show() {
         $items = Item::with('category')->paginate(10);
         $categories = Category::all();
@@ -81,7 +82,7 @@ class LoanController extends Controller
         $items = Item::with('category')->get();
         $categories = Category::all();
         return view('loans.edit', compact('loan', 'items', 'categories', 'selectedItem'));
-    }   
+    }
 
     public function update(Request $request, $id) {
         $loan = Loan::findOrFail($id);
@@ -126,38 +127,38 @@ class LoanController extends Controller
 
     public function approve($id) {
         $loan = Loan::findOrFail($id);
-        
+
         if ($loan->status !== 'submitted') {
             return redirect()->back()->with(['error' => 'Only submitted loans can be approved!']);
         }
-        
+
         $loan->status = 'approved';
         $loan->staff_id = auth()->id();
         $loan->save();
-        
+
         ActivityLog::create([
             'user_id' => auth()->id(),
             'activity' => 'Approved loan: ' . $loan->loan_code
         ]);
-        
+
         return redirect()->route('loans.index-table')->with(['success' => 'Loan approved successfully!']);
     }
-    
+
     public function complete($id) {
         $loan = Loan::findOrFail($id);
-        
+
         if ($loan->status !== 'waiting') {
             return redirect()->back()->with(['error' => 'Only waiting loans can be completed!']);
         }
-        
+
         $loan->status = 'returned';
         $loan->save();
-        
+
         ActivityLog::create([
             'user_id' => auth()->id(),
             'activity' => 'Completed loan: ' . $loan->loan_code
         ]);
-        
+
         return redirect()->route('loans.index-table')->with(['success' => 'Loan completed successfully!']);
     }
 
