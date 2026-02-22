@@ -173,6 +173,16 @@
                     </a>
                 </li>
             @endif
+            @if (Auth::user()->role === 'Admin')
+                <li class="nav-item">
+                    <a href="{{ route('reports.index') }}"
+                    class="nav-link d-flex align-items-center gap-2
+                    {{ request()->is('reports*') ? 'active' : 'text-dark' }}">
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+                        Report
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </div>

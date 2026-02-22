@@ -9,6 +9,7 @@ use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,5 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/{id}/complete', [LoanController::class, 'complete'])->name('loans.complete');
     
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
 });
 
