@@ -141,7 +141,7 @@
                     </div>
 
                     <div class="d-flex gap-2 justify-content-end pt-3 border-top">
-                        <a href="{{ route('user.index') }}" class="btn btn-secondary px-4">
+                        <a href="{{ route('dashboard') }}" class="btn btn-secondary px-4">
                             <i class="bi bi-x-circle me-2"></i>
                             Cancel
                         </a>

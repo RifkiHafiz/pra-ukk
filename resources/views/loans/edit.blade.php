@@ -187,7 +187,7 @@
 
                             <!-- Form Actions -->
                             <div class="d-flex gap-2 justify-content-end pt-3 border-top">
-                                <a href="{{ route('loans.index') }}" class="btn btn-secondary px-4 rounded-3">
+                                <a href="{{ route('loans.index-table') }}" class="btn btn-secondary px-4 rounded-3">
                                     <i class="bi bi-x-circle me-2"></i>
                                     Cancel
                                 </a>

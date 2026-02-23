@@ -236,7 +236,7 @@
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteItemModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog">
         <div class="modal-content border-0 rounded-4">
             <div class="modal-header bg-danger text-white rounded-top-4">
                 <h5 class="modal-title mb-0">

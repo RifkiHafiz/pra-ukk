@@ -62,10 +62,9 @@ class ReturnController extends Controller
     }
 
     public function edit($id) {
-        $loans = Loan::where('status', 'waiting')->with('item', 'user')->findOrFail($id);
-        $selectedLoanId = $id->query('loan_id');
-        $selectedLoan = $selectedLoanId ? Loan::with('item', 'user')->find($selectedLoanId) : null;
-        return view('returns.edit', compact('loans', 'selectedLoan'));
+        $returnItem = ReturnItem::with('loan.item', 'loan.user')->findOrFail($id);
+        $selectedLoan = $returnItem->loan;
+        return view('returns.edit', compact('returnItem', 'selectedLoan'));
     }
 
     public function update(Request $request, $id) {

@@ -156,7 +156,7 @@
 
                     <!-- Form Actions -->
                     <div class="d-flex gap-2 justify-content-end pt-3 border-top">
-                        <a href="{{ route('categories.index') }}" class="btn btn-secondary px-4">
+                        <a href="{{ route('returns.index') }}" class="btn btn-secondary px-4">
                             <i class="bi bi-x-circle me-2"></i>
                             Cancel
                         </a>

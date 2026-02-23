@@ -26,7 +26,7 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <!-- Success/Error Messages -->
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
@@ -75,7 +75,7 @@
                                 <td class="p-3 align-middle border-bottom border-light">{{ $loop->iteration }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="user-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 35px; height: 35px; background: linear-gradient(135deg, #0ea5e9, #0369a1);">
+                                        <div class="user-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 35px; height: 35px;">
                                             <img src="{{ $log->user->profile_picture ? asset('storage/' . $log->user->profile_picture) : asset('storage/img/user-default.jpg') }}" alt="Profile"
                                             class="rounded-circle object-fit-cover border border-white" width="35" height="35">
                                         </div>

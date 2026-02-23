@@ -46,7 +46,7 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <!-- Success/Error Messages -->
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
@@ -97,7 +97,7 @@
                     <tbody>
                         @forelse ($loans as $loan)
                             <tr>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $loop->iteration }}</td>
+                                <td class="p-3 align-middle text-center border-bottom border-light">{{ $loop->iteration }}</td>
 
                                 <td class="p-3 align-middle border-bottom border-light">{{ $loan->loan_code }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">{{ $loan->item->item_name }}</td>

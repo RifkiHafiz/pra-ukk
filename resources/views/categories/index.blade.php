@@ -46,7 +46,7 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <!-- Success/Error Messages -->
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
@@ -89,7 +89,7 @@
                 <table class="table table-hover mb-0" id="categoriesTable">
                     <thead>
                         <tr>
-                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">ID</th>
+                            <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">No</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase">Category Name</th>
                             <th class="text-primary fw-semibold border-0 p-3 small text-uppercase text-center">Actions</th>
                         </tr>
@@ -97,7 +97,7 @@
                     <tbody>
                         @forelse ($categories as $category)
                             <tr>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $category->id }}</td>
+                                <td class="p-3 align-middle border-bottom border-light">{{ $loop->iteration }}</td>
 
                                 <td class="p-3 align-middle border-bottom border-light">{{ $category->category_name }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">

@@ -46,7 +46,7 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <!-- Success/Error Messages -->
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 mt-2" role="alert">
@@ -100,7 +100,7 @@
                     <tbody>
                         @forelse ($users as $user)
                             <tr>
-                                <td class="p-3 align-middle border-bottom border-light">{{ $user->id }}</td>
+                                <td class="p-3 align-middle text-center border-bottom border-light">{{ $loop->iteration }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="flex-shrink-0">

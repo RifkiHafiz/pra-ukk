@@ -279,7 +279,7 @@
         .input-icon {
             position: absolute;
             left: 15px;
-            bottom: 15px;
+            bottom: 10px;
             color: #3b82f6;
             font-size: 1.2rem;
         }

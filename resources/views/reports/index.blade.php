@@ -49,7 +49,7 @@
     }
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
 
     {{-- Flash Messages --}}
     @if(session('success'))
