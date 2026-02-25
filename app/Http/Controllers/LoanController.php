@@ -20,7 +20,17 @@ class LoanController extends Controller
     public function show() {
         $items = Item::with('category')->paginate(10);
         $categories = Category::all();
-        $loans = Loan::with('user', 'item')->paginate(10);
+
+        $user = auth()->user();
+
+        if (in_array($user->role, ['Admin', 'Staff'])) {
+            $loans = Loan::with('user', 'item')->paginate(10);
+        } else {
+            $loans = Loan::with('user', 'item')
+                ->where('borrower_id', $user->id)
+                ->paginate(10);
+        }
+
         return view('loans.index-table', compact('loans', 'items', 'categories'));
     }
 

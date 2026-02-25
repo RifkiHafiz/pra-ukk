@@ -11,8 +11,21 @@ use App\Models\ActivityLog;
 class ReturnController extends Controller
 {
     public function index() {
+        $user = auth()->user();
+
         $returns = ReturnItem::with('loan.item', 'loan.user')->paginate(10);
-        $loans = Loan::whereIn('status', ['approved', 'waiting'])->with('item', 'user', 'returnItem')->get();
+
+        if (in_array($user->role, ['Admin', 'Staff'])) {
+            $loans = Loan::whereIn('status', ['approved', 'waiting'])
+                ->with('item', 'user', 'returnItem')
+                ->get();
+        } else {
+            $loans = Loan::whereIn('status', ['approved', 'waiting'])
+                ->where('borrower_id', $user->id)
+                ->with('item', 'user', 'returnItem')
+                ->get();
+        }
+
         return view('returns.index', compact('returns', 'loans'));
     }
 

@@ -219,4 +219,45 @@
         @endif
     </div>
 </div>
+
+<script>
+    // Search items function
+    function searchItems() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.item-container');
+
+        items.forEach(item => {
+            const itemName = item.getAttribute('data-name');
+            if (itemName.includes(searchValue)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter by category function
+    function filterCategory(categoryId) {
+        const items = document.querySelectorAll('.item-container');
+        const buttons = document.querySelectorAll('[onclick^="filterCategory"]');
+
+        // Update active button
+        buttons.forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-primary');
+        });
+        event.target.classList.remove('btn-outline-primary');
+        event.target.classList.add('btn-primary');
+
+        // Filter items
+        items.forEach(item => {
+            const itemCategory = item.getAttribute('data-category');
+            if (categoryId === 'all' || itemCategory === categoryId) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
 @endsection
