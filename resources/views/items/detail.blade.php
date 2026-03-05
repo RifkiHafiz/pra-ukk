@@ -68,14 +68,11 @@
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-primary">Item Image</label>
                         <div class="file-upload-wrapper rounded-3 p-4 text-center" onclick="document.getElementById('item_image').click()">
-                            <i class="bi bi-cloud-upload display-4 text-primary d-block mb-3"></i>
-                            <p class="fw-semibold text-dark mb-1">Click to upload item image</p>
-                            <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
                             <input type="file" id="item_image" name="item_image" accept="image/*" class="d-none" onchange="previewImage(event)" disabled>
                             @if($item->item_image)
-                                <img id="preview" class="img-thumbnail mt-3" style="max-width: 200px;" src="{{ asset('storage/' . $item->item_image) }}" alt="Preview">
+                                <img id="preview" class="img-thumbnail" style="max-width: 200px;" src="{{ asset('storage/' . $item->item_image) }}" alt="Preview">
                             @else
-                                <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
+                                <img id="preview" class="img-thumbnail d-none" style="max-width: 200px;" alt="Preview">
                             @endif
                         </div>
                     </div>

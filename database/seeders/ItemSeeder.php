@@ -15,6 +15,7 @@ class ItemSeeder extends Seeder
         // Electronics (category_id: 1)
         Item::create([
             'category_id' => 1,
+            'item_image' => 'img/laptop-dell.jpg',
             'item_code' => 'ELEC-001',
             'item_name' => 'Laptop Dell Latitude 5420',
             'total_quantity' => 10,
@@ -24,6 +25,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 1,
+            'item_image' => 'img/tablet-samsung.jpg',
             'item_code' => 'ELEC-002',
             'item_name' => 'Tablet Samsung Galaxy Tab S8',
             'total_quantity' => 8,
@@ -34,6 +36,7 @@ class ItemSeeder extends Seeder
         // Sports Equipment (category_id: 2)
         Item::create([
             'category_id' => 2,
+            'item_image' => 'img/bola-adidas.jpg',
             'item_code' => 'SPORT-001',
             'item_name' => 'Bola Sepak Adidas',
             'total_quantity' => 15,
@@ -43,6 +46,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 2,
+            'item_image' => 'img/raket-yonex.jpg',
             'item_code' => 'SPORT-002',
             'item_name' => 'Raket Badminton Yonex',
             'total_quantity' => 20,
@@ -53,6 +57,7 @@ class ItemSeeder extends Seeder
         // Laboratory Equipment (category_id: 3)
         Item::create([
             'category_id' => 3,
+            'item_image' => 'img/mikroskop.jpg',
             'item_code' => 'LAB-001',
             'item_name' => 'Mikroskop Digital Olympus',
             'total_quantity' => 5,
@@ -62,6 +67,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 3,
+            'item_image' => 'img/pipet-volume.jpg',
             'item_code' => 'LAB-002',
             'item_name' => 'Pipet Volumetrik Set',
             'total_quantity' => 12,
@@ -72,6 +78,7 @@ class ItemSeeder extends Seeder
         // Office Equipment (category_id: 4)
         Item::create([
             'category_id' => 4,
+            'item_image' => 'img/printer-laserjet.jpg',
             'item_code' => 'OFF-001',
             'item_name' => 'Printer HP LaserJet Pro',
             'total_quantity' => 6,
@@ -81,6 +88,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 4,
+            'item_image' => 'img/scanner.jpg',
             'item_code' => 'OFF-002',
             'item_name' => 'Scanner Canon LiDE 400',
             'total_quantity' => 4,
@@ -91,6 +99,7 @@ class ItemSeeder extends Seeder
         // Audio Visual Equipment (category_id: 5)
         Item::create([
             'category_id' => 5,
+            'item_image' => 'img/projector.jpg',
             'item_code' => 'AV-001',
             'item_name' => 'Projector Epson EB-X05',
             'total_quantity' => 8,
@@ -100,6 +109,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 5,
+            'item_image' => 'img/kamera-canon.jpg',
             'item_code' => 'AV-002',
             'item_name' => 'Kamera DSLR Canon EOS 90D',
             'total_quantity' => 3,
@@ -110,6 +120,7 @@ class ItemSeeder extends Seeder
         // Power Tools (category_id: 6)
         Item::create([
             'category_id' => 6,
+            'item_image' => 'img/bor-listrik.jpg',
             'item_code' => 'TOOL-001',
             'item_name' => 'Bor Listrik Makita HP1630',
             'total_quantity' => 7,
@@ -119,6 +130,7 @@ class ItemSeeder extends Seeder
 
         Item::create([
             'category_id' => 6,
+            'item_image' => 'img/gerinda.jpg',
             'item_code' => 'TOOL-002',
             'item_name' => 'Mesin Gerinda Bosch GWS 060',
             'total_quantity' => 5,
