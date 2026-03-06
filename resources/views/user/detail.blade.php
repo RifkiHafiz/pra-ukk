@@ -69,14 +69,13 @@
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-primary">Profile Picture</label>
                         <div class="file-upload-wrapper rounded-3 p-4 text-center" onclick="document.getElementById('profile_picture').click()">
-                            <i class="bi bi-cloud-upload display-4 text-primary d-block mb-3"></i>
-                            <p class="fw-semibold text-dark mb-1">Click to upload profile picture</p>
-                            <p class="text-muted small mb-0">PNG, JPG up to 2MB</p>
                             <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="d-none" onchange="previewImage(event)" disabled>
                             @if($user->profile_picture)
                                 <img id="preview" class="img-thumbnail mt-3" style="max-width: 200px;" src="{{ asset('storage/' . $user->profile_picture) }}" alt="Preview">
                             @else
                                 <img id="preview" class="img-thumbnail mt-3 d-none" style="max-width: 200px;" alt="Preview">
+                                <i class="bi bi-camera-video-off display-4 text-primary d-block mb-3"></i>
+                                <p class="fw-semibold text-dark mb-1">No profile picture uploaded</p>
                             @endif
                         </div>
                         <div class="form-text">Optional: Upload a profile picture for this user</div>

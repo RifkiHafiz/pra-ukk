@@ -95,7 +95,7 @@
                                         <span class="badge bg-warning rounded-pill px-3 py-2">Submitted</span>
                                     @elseif($loan->status === 'approved')
                                         <span class="badge bg-success rounded-pill px-3 py-2">Approved</span>
-                                    @elseif($loan->status === 'returned')
+                                    @elseif($loan->status === 'rejected')
                                         <span class="badge bg-danger rounded-pill px-3 py-2">Rejected</span>
                                     @elseif($loan->status === 'waiting')
                                         <span class="badge bg-info rounded-pill px-3 py-2">Waiting</span>
