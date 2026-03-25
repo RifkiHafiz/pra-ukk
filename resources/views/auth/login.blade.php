@@ -357,6 +357,44 @@
             color: #1e40af;
         }
 
+        .alert-error {
+            background-color: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .alert-error i {
+            color: #ef4444;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .alert-error ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .alert-error ul li {
+            color: #dc2626;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .input-error {
+            border-color: #ef4444 !important;
+        }
+
+        .input-error:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.15) !important;
+        }
+
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
@@ -420,15 +458,27 @@
 
                 <form method="POST" action="{{ route('login') }}" onsubmit="showLoading()">
                     @csrf
+
+                    @if ($errors->any())
+                        <div class="alert-error">
+                            <i class="bi bi-exclamation-circle-fill"></i>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="align-self-center">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="form-group">
                         <label for="email" class="form-label">Email Address</label>
                         <i class="bi bi-envelope-fill input-icon"></i>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        <input type="email" name="email" class="form-control {{ $errors->has('email') ? 'input-error' : '' }}" id="email" placeholder="Enter your email" value="{{ old('email') }}" required>
                     </div>
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <i class="bi bi-lock-fill input-icon"></i>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        <input type="password" name="password" class="form-control {{ $errors->has('password') ? 'input-error' : '' }}" id="password" placeholder="Enter your password" minlength="8" required>
                     </div>
 
                     <button type="submit" class="btn btn-login">Login</button>

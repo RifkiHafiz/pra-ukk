@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('loan_date');
             $table->date('return_date')->nullable();
             $table->text('notes')->nullable();
+            $table->text('rejected_reason')->nullable();
             $table->enum('status', ['submitted', 'approved', 'borrowed', 'waiting', 'returned', 'rejected'])->default('submitted');
             $table->timestamps();
         });
