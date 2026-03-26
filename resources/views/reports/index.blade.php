@@ -188,15 +188,22 @@
                                     @php
                                         $statusClass = match($loan->status) {
                                             'submitted' => 'warning',
-                                            'approved'  => 'info',
-                                            'waiting'   => 'secondary',
+                                            'approved'  => 'success',
+                                            'borrowed'  => 'primary',
+                                            'waiting'   => 'info',
                                             'returned'  => 'success',
+                                            'rejected'  => 'danger',
                                             default     => 'dark',
                                         };
                                     @endphp
-                                    <span class="badge bg-{{ $statusClass }} rounded-pill text-capitalize">
-                                        {{ $loan->status }}
-                                    </span>
+                                    @if($loan->status === 'cancelled')
+                                        <span class="badge rounded-pill text-capitalize text-white"
+                                            style="background:#f97316;">cancelled</span>
+                                    @else
+                                        <span class="badge bg-{{ $statusClass }} rounded-pill text-capitalize">
+                                            {{ $loan->status }}
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -244,8 +251,7 @@
                                     @php
                                         $condClass = match($return->condition) {
                                             'good'    => 'success',
-                                            'damaged' => 'warning',
-                                            'lost'    => 'danger',
+                                            'damaged' => 'danger',
                                             default   => 'secondary',
                                         };
                                     @endphp

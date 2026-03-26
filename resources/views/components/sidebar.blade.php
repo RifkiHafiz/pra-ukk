@@ -54,8 +54,36 @@
         background-color: var(--bs-primary);
         color: white !important;
     }
+
+    /* ── Mobile: sidebar off-canvas behaviour ─────────────── */
+    #appSidebar {
+        transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 991.98px) {
+        #appSidebar {
+            transform: translateX(-270px);
+            z-index: 1045 !important;
+        }
+        #appSidebar.sidebar-open {
+            transform: translateX(0);
+        }
+    }
+
+    /* semi-transparent overlay behind sidebar on mobile */
+    #sidebarOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1044;
+    }
+    #sidebarOverlay.active {
+        display: block;
+    }
 </style>
-    <div class="d-flex flex-column p-3 bg-white rounded-end-5"
+    <div id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div id="appSidebar" class="d-flex flex-column p-3 bg-white rounded-end-5"
         style="position: fixed; top: 0; left: 0; width: 260px; min-height: 100vh; border-right: 1px solid #e5e7eb; z-index: 10;">
         <a class="navbar-brand" href="/">
             <img src="{{ asset('storage/img/logo-BorrowMe.png') }}" alt="BorrowMe Logo">
@@ -187,3 +215,23 @@
     </div>
 </div>
 
+<script>
+function toggleSidebar() {
+    const sidebar  = document.getElementById('appSidebar');
+    const overlay  = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('sidebar-open');
+    overlay.classList.toggle('active');
+}
+function closeSidebar() {
+    document.getElementById('appSidebar').classList.remove('sidebar-open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+// Close sidebar when a nav link is clicked on mobile
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.innerWidth < 992) {
+        document.querySelectorAll('#appSidebar .nav-link:not([data-bs-toggle])').forEach(function(link) {
+            link.addEventListener('click', closeSidebar);
+        });
+    }
+});
+</script>

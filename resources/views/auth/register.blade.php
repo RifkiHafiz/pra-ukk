@@ -14,6 +14,10 @@
             overflow: hidden;
         }
 
+        @media (max-width: 768px) {
+            body { height: auto; overflow: auto; }
+        }
+
         .register-container {
             height: 100vh;
             display: flex;
@@ -330,31 +334,41 @@
         @media (max-width: 768px) {
             .register-container {
                 flex-direction: column-reverse;
+                min-height: 100vh;
+                height: auto;
             }
 
             .welcome-section {
-                flex: 0;
-                padding: 40px 30px;
-                min-height: 35vh;
+                flex: 0 0 auto;
+                padding: 30px 24px;
+                min-height: auto;
             }
 
             .welcome-section h1 {
-                font-size: 2rem;
+                font-size: 1.75rem;
+                margin-bottom: 10px;
             }
 
             .welcome-section p {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
 
             .register-section {
                 flex: 1;
-                padding: 30px 20px;
+                padding: 24px 20px;
+                align-items: flex-start;
             }
 
             .decoration,
             .circle {
                 display: none;
             }
+        }
+
+        @media (max-width: 400px) {
+            .welcome-section { padding: 20px 16px; }
+            .register-section { padding: 20px 16px; }
+            .register-header h2 { font-size: 1.5rem; }
         }
     </style>
 

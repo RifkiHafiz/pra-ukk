@@ -14,112 +14,53 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <style>
-    .poppins-thin {
-    font-family: "Poppins", sans-serif;
-    font-weight: 100;
-    font-style: normal;
+    /* ── Poppins font weights ───────────── */
+    .poppins-thin        { font-family:"Poppins",sans-serif; font-weight:100; }
+    .poppins-extralight  { font-family:"Poppins",sans-serif; font-weight:200; }
+    .poppins-light       { font-family:"Poppins",sans-serif; font-weight:300; }
+    .poppins-regular     { font-family:"Poppins",sans-serif; font-weight:400; }
+    .poppins-medium      { font-family:"Poppins",sans-serif; font-weight:500; }
+    .poppins-semibold    { font-family:"Poppins",sans-serif; font-weight:600; }
+    .poppins-bold        { font-family:"Poppins",sans-serif; font-weight:700; }
+    .poppins-extrabold   { font-family:"Poppins",sans-serif; font-weight:800; }
+    .poppins-black       { font-family:"Poppins",sans-serif; font-weight:900; }
+    .poppins-thin-italic       { font-family:"Poppins",sans-serif; font-weight:100; font-style:italic; }
+    .poppins-extralight-italic { font-family:"Poppins",sans-serif; font-weight:200; font-style:italic; }
+    .poppins-light-italic      { font-family:"Poppins",sans-serif; font-weight:300; font-style:italic; }
+    .poppins-regular-italic    { font-family:"Poppins",sans-serif; font-weight:400; font-style:italic; }
+    .poppins-medium-italic     { font-family:"Poppins",sans-serif; font-weight:500; font-style:italic; }
+    .poppins-semibold-italic   { font-family:"Poppins",sans-serif; font-weight:600; font-style:italic; }
+    .poppins-bold-italic       { font-family:"Poppins",sans-serif; font-weight:700; font-style:italic; }
+    .poppins-extrabold-italic  { font-family:"Poppins",sans-serif; font-weight:800; font-style:italic; }
+    .poppins-black-italic      { font-family:"Poppins",sans-serif; font-weight:900; font-style:italic; }
+
+    /* ── Responsive layout ───────────────── */
+    /* Main content area adjusts alongside sidebar */
+    .main-content {
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+        min-width: 0; /* prevent overflow on small flex children */
+    }
+    @media (min-width: 992px) {
+        .main-content { margin-left: 260px; }
     }
 
-    .poppins-extralight {
-    font-family: "Poppins", sans-serif;
-    font-weight: 200;
-    font-style: normal;
+    /* Touch-friendly horizontal table scroll */
+    .table-responsive { -webkit-overflow-scrolling: touch; }
+
+    /* Tighten card padding on phones */
+    @media (max-width: 575.98px) {
+        .card-body { padding: 1rem !important; }
+        .container-fluid { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+        .modal-dialog { margin: 0.5rem !important; }
     }
 
-    .poppins-light {
-    font-family: "Poppins", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    }
-
-    .poppins-regular {
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    }
-
-    .poppins-medium {
-    font-family: "Poppins", sans-serif;
-    font-weight: 500;
-    font-style: normal;
-    }
-
-    .poppins-semibold {
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    }
-
-    .poppins-bold {
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    }
-
-    .poppins-extrabold {
-    font-family: "Poppins", sans-serif;
-    font-weight: 800;
-    font-style: normal;
-    }
-
-    .poppins-black {
-    font-family: "Poppins", sans-serif;
-    font-weight: 900;
-    font-style: normal;
-    }
-
-    .poppins-thin-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 100;
-    font-style: italic;
-    }
-
-    .poppins-extralight-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 200;
-    font-style: italic;
-    }
-
-    .poppins-light-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 300;
-    font-style: italic;
-    }
-
-    .poppins-regular-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-    }
-
-    .poppins-medium-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 500;
-    font-style: italic;
-    }
-
-    .poppins-semibold-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 600;
-    font-style: italic;
-    }
-
-    .poppins-bold-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-    }
-
-    .poppins-extrabold-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 800;
-    font-style: italic;
-    }
-
-    .poppins-black-italic {
-    font-family: "Poppins", sans-serif;
-    font-weight: 900;
-    font-style: italic;
+    /* Form row columns full-width on mobile */
+    @media (max-width: 767.98px) {
+        .row > [class*="col-md-"] {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
     }
 </style>
 <body style="background-color: #F9F8F6;" class="poppins-regular">
@@ -134,7 +75,7 @@
     <x-alert-modal />
 
     @if (Auth::user() && !request()->routeIs('login.page', 'register.page', 'landing'))
-        <div style="margin-left: 260px;">
+        <div class="main-content">
             @yield('content')
         </div>
     @else

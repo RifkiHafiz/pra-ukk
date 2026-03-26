@@ -57,74 +57,87 @@
     background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
     color: #dc2626;
 }
+
+/* hide username text on small phones, keep avatar visible */
+@media (max-width: 400px) {
+    .profile-dropdown-toggle .profile-username {
+        display: none;
+    }
+    .profile-dropdown-toggle {
+        padding: 4px 10px 4px 4px !important;
+    }
+}
 </style>
 <div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm" style="position: sticky; top: 0; z-index: 10;">
-        <div class="container">
+        <div class="container d-flex align-items-center">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            {{-- ☰ Sidebar toggle — mobile only, shown when logged in --}}
+            @auth
+                @if (!request()->routeIs('login.page', 'register.page', 'landing'))
+                    <button class="navbar-toggler d-lg-none border-0 me-2" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                @endif
+            @endauth
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 profile-dropdown-toggle"
-                            href="#"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+            {{-- spacer to push profile to right --}}
+            <span class="flex-grow-1"></span>
 
-                                {{-- Foto Profile --}}
-                                <img
-                                    src="{{ auth()->user()->profile_picture
-                                        ? asset('storage/' . auth()->user()->profile_picture)
-                                        : asset('storage/img/user-default.jpg') }}"
-                                    alt="Profile"
-                                    class="rounded-circle border border-white profile-avatar-nav"
-                                    width="35"
-                                    height="35"
-                                    style="object-fit: cover;"
-                                >
+            {{-- ── Profile dropdown — ALWAYS visible (outside collapse) ── --}}
+            @auth
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 profile-dropdown-toggle"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
 
-                                {{-- Username --}}
-                                <span>{{ auth()->user()->username }}</span>
+                        {{-- Foto Profile --}}
+                        <img
+                            src="{{ auth()->user()->profile_picture
+                                ? asset('storage/' . auth()->user()->profile_picture)
+                                : asset('storage/img/user-default.jpg') }}"
+                            alt="Profile"
+                            class="rounded-circle border border-white profile-avatar-nav"
+                            width="35"
+                            height="35"
+                            style="object-fit: cover;"
+                        >
+                        {{-- Username --}}
+                        <span class="profile-username">{{ auth()->user()->username }}</span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person-circle"></i>
+                                <span>Profile</span>
                             </a>
-
-                            <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        <i class="bi bi-person-circle"></i>
-                                        <span>Profile</span>
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider my-1"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}" onsubmit="showLoading()">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">
-                                            <i class="bi bi-box-arrow-right"></i>
-                                            <span>Logout</span>
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
                         </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}" onsubmit="showLoading()">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            @else
+                {{-- Guest: Login / Sign Up buttons (collapse on very small screens) --}}
+                <div class="d-flex gap-2">
+                    @if (request()->routeIs('register.page'))
+                        <a class="btn btn-light text-primary px-3" href="{{ route('login.page') }}">Login</a>
                     @else
-                        @if (request()->routeIs('register.page'))
-                            <li class="nav-item">
-                                <a class="btn btn-light text-primary px-3 ms-2" href="{{ route('login.page') }}">Login</a>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="btn btn-light text-primary px-3 ms-2 " href="{{ route('register.page') }}">Sign Up</a>
-                            </li>
-                        @endif
-                    @endauth
-                </ul>
-            </div>
+                        <a class="btn btn-light text-primary px-3" href="{{ route('register.page') }}">Sign Up</a>
+                    @endif
+                </div>
+            @endauth
+
         </div>
     </nav>
 </div>
