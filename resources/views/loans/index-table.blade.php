@@ -122,7 +122,7 @@
 
                                     @if ($hasActions)
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-primary rounded-3 px-3" type="button"
+                                        <button class="btn btn-sm btn-outline-primary rounded-3 px-3" style="width: 103px;" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="bi bi-three-dots-vertical"></i> Actions
                                         </button>
@@ -187,7 +187,7 @@
                                             {{-- ADMIN / BORROWER: Cancel --}}
                                             @if ($canCancel && $loan->status === 'submitted')
                                                 <li>
-                                                    <button type="button" class="dropdown-item text-warning"
+                                                    <button type="button" class="dropdown-item" style="color: #f97316;"
                                                         onclick="openCancelModal({{ $loan->id }})">
                                                         <i class="bi bi-slash-circle me-2"></i> Cancel
                                                     </button>
