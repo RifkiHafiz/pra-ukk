@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/loans/index-table', [LoanController::class, 'show'])->name('loans.index-table');
     Route::post('/loans/{id}/approve', [LoanController::class, 'approve'])->name('loans.approve');
     Route::post('/loans/{id}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+    Route::post('/loans/{id}/cancel', [LoanController::class, 'cancel'])->name('loans.cancel');
     Route::post('/loans/{id}/borrowed', [LoanController::class, 'borrowed'])->name('loans.borrowed');
     Route::post('/loans/{id}/complete', [LoanController::class, 'complete'])->name('loans.complete');
 

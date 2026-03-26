@@ -74,85 +74,156 @@
                                 <td class="p-3 align-middle border-bottom border-light">{{ $loan->quantity }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">{{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }} - <br> {{ \Carbon\Carbon::parse($loan->return_date)->format('d M Y') }}</td>
                                 <td class="p-3 align-middle border-bottom border-light">
-                                    @if($loan->status === 'submitted')
-                                        <span class="badge bg-warning rounded-pill px-3 py-2">Submitted</span>
-                                    @elseif($loan->status === 'approved')
-                                        <span class="badge bg-success rounded-pill px-3 py-2">Approved</span>
-                                    @elseif($loan->status === 'rejected')
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">Rejected</span>
-                                    @elseif($loan->status === 'waiting')
-                                        <span class="badge bg-info rounded-pill px-3 py-2">Waiting</span>
-                                    @elseif($loan->status === 'borrowed')
-                                        <span class="badge bg-primary rounded-pill px-3 py-2">Borrowed</span>
-                                    @elseif($loan->status === 'returned')
-                                        <span class="badge bg-secondary rounded-pill px-3 py-2">Returned</span>
-                                    @endif
-                                </td>
-                                <td class="p-3 align-middle border-bottom border-light">
-                                    <div class="d-flex flex-column gap-2">
-                                        @if (Auth::user()->role !== 'Borrower')
-                                            @if($loan->status === 'submitted')
-                                                <form action="{{ route('loans.approve', $loan->id) }}" method="POST" class="d-inline action-form">
-                                                    @csrf
-                                                    <button type="button"
-                                                        class="btn btn-success btn-sm w-100 px-3 py-1"
-                                                        title="Approve Loan"
-                                                        onclick="confirmAction(this, 'Approve Loan', 'Are you sure you want to approve this loan?', 'Approve', 'btn-success')">
-                                                        <i class="bi bi-check-circle me-1"></i> Approve
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            @if($loan->status === 'submitted')
-                                                <form action="{{ route('loans.reject', $loan->id) }}" method="POST" class="d-inline action-form">
-                                                    @csrf
-                                                    <button type="button"
-                                                        class="btn btn-danger btn-sm w-100 px-3 py-1"
-                                                        title="Reject"
-                                                        onclick="confirmAction(this, 'Reject Loan', 'Are you sure you want to reject this loan?', 'Reject', 'btn-danger')">
-                                                        <i class="bi bi-x-circle me-1"></i> Reject
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            @if($loan->status === 'approved')
-                                                <form action="{{ route('loans.borrowed', $loan->id) }}" method="POST" class="d-inline action-form">
-                                                    @csrf
-                                                    <button type="button"
-                                                        class="btn btn-primary btn-sm w-100 px-3 py-1 text-white"
-                                                        title="Mark as Borrowed"
-                                                        onclick="confirmAction(this, 'Mark as Borrowed', 'Are you sure you want to mark this loan as borrowed?', 'Mark as Borrowed', 'btn-primary')">
-                                                        <i class="bi bi-check-circle me-1"></i> Mark as Borrowed
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            @if($loan->status === 'waiting')
-                                                <form action="{{ route('loans.complete', $loan->id) }}" method="POST" class="d-inline action-form">
-                                                    @csrf
-                                                    <button type="button"
-                                                        class="btn btn-info btn-sm w-100 px-3 py-1 text-white"
-                                                        title="Complete Loan"
-                                                        onclick="confirmAction(this, 'Complete Loan', 'Are you sure you want to complete this loan?', 'Complete', 'btn-info')">
-                                                        <i class="bi bi-check-circle-fill me-1"></i> Complete
-                                                    </button>
-                                                </form>
-                                            @endif
+                                    @php
+                                        $statusMap = [
+                                            'submitted'  => ['label' => 'Submitted',  'class' => 'bg-warning',   'style' => ''],
+                                            'approved'   => ['label' => 'Approved',   'class' => 'bg-success',   'style' => ''],
+                                            'rejected'   => ['label' => 'Rejected',   'class' => 'bg-danger',    'style' => ''],
+                                            'cancelled'  => ['label' => 'Cancelled',  'class' => '',             'style' => 'background:#f97316;'],
+                                            'waiting'    => ['label' => 'Waiting',    'class' => 'bg-info',      'style' => ''],
+                                            'borrowed'   => ['label' => 'Borrowed',   'class' => 'bg-primary',   'style' => ''],
+                                            'returned'   => ['label' => 'Returned',   'class' => 'bg-secondary', 'style' => ''],
+                                        ];
+                                        $s = $statusMap[$loan->status] ?? ['label' => ucfirst($loan->status), 'class' => 'bg-secondary', 'style' => ''];
+                                    @endphp
+                                    <div class="d-flex align-items-center gap-1 flex-nowrap">
+                                        <span class="badge {{ $s['class'] }} rounded-pill px-3 py-2" style="{{ $s['style'] }}">{{ $s['label'] }}</span>
+                                        @if($loan->rejected_reason && in_array($loan->status, ['rejected', 'cancelled']))
+                                            @php
+                                                $reasonTitle = $loan->status === 'cancelled' ? 'Cancelled Reason' : 'Rejected Reason';
+                                                $reasonColor = $loan->status === 'cancelled' ? '#f97316' : '#ef4444';
+                                            @endphp
+                                            <button type="button"
+                                                class="btn btn-link btn-sm p-0"
+                                                style="color:{{ $reasonColor }}; line-height:1;"
+                                                title="View reason"
+                                                onclick="showReason('{{ addslashes($loan->rejected_reason) }}', '{{ $reasonTitle }}')"
+                                            ><i class="bi bi-info-circle-fill fs-6"></i></button>
                                         @endif
+                                    </div>
+                                </td>
 
-                                        <div class="d-flex gap-2">
-                                            @if ($loan->status === 'submitted')
-                                                @if (Auth::user()->role !== 'Staff')
-                                                    <a href="{{ route('loans.edit', $loan->id) }}" class="btn btn-warning btn-sm text-white px-3 py-1 flex-fill">
-                                                        <i class="bi bi-pencil"></i>
-                                                    </a>
-                                                    <button class="btn btn-danger btn-sm px-3 py-1 flex-fill" onclick="confirmDelete({{ $loan->id }})" title="Delete">
-                                                        <i class="bi bi-trash"></i>
+                                <td class="p-3 align-middle border-bottom border-light text-center">
+                                    @php
+                                        $isAdmin    = Auth::user()->role === 'Admin';
+                                        $isStaff    = Auth::user()->role === 'Staff';
+                                        $isBorrower = Auth::user()->role === 'Borrower';
+                                        $isOwner    = $loan->borrower_id === Auth::id();
+                                        $canCancel  = $isAdmin || ($isBorrower && $isOwner);
+                                        $canResubmit = $isAdmin || ($isBorrower && $isOwner);
+
+                                        // Collect available actions
+                                        $hasActions =
+                                            (!$isBorrower && in_array($loan->status, ['submitted', 'approved', 'waiting'])) ||
+                                            ($canCancel && $loan->status === 'submitted') ||
+                                            ($canResubmit && in_array($loan->status, ['rejected', 'cancelled'])) ||
+                                            ($isAdmin && $loan->status === 'submitted');
+                                    @endphp
+
+                                    @if ($hasActions)
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-primary rounded-3 px-3" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots-vertical"></i> Actions
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" style="min-width:200px">
+
+                                            {{-- STAFF / ADMIN: Approve --}}
+                                            @if (!$isBorrower && $loan->status === 'submitted')
+                                                <li>
+                                                    <form action="{{ route('loans.approve', $loan->id) }}" method="POST" class="action-form">
+                                                        @csrf
+                                                        <button type="button" class="dropdown-item text-success"
+                                                            onclick="confirmAction(this, 'Approve Loan', 'Are you sure you want to approve this loan?', 'Approve', 'btn-success')">
+                                                            <i class="bi bi-check-circle me-2"></i> Approve
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endif
+
+                                            {{-- STAFF / ADMIN: Reject --}}
+                                            @if (!$isBorrower && $loan->status === 'submitted')
+                                                <li>
+                                                    <button type="button" class="dropdown-item text-danger"
+                                                        onclick="openRejectModal({{ $loan->id }})">
+                                                        <i class="bi bi-x-circle me-2"></i> Reject
                                                     </button>
+                                                </li>
+                                            @endif
+
+                                            {{-- STAFF / ADMIN: Mark as Borrowed --}}
+                                            @if (!$isBorrower && $loan->status === 'approved')
+                                                <li>
+                                                    <form action="{{ route('loans.borrowed', $loan->id) }}" method="POST" class="action-form">
+                                                        @csrf
+                                                        <button type="button" class="dropdown-item text-primary"
+                                                            onclick="confirmAction(this, 'Mark as Borrowed', 'Are you sure you want to mark this loan as borrowed?', 'Mark as Borrowed', 'btn-primary')">
+                                                            <i class="bi bi-box-arrow-right me-2"></i> Mark as Borrowed
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endif
+
+                                            {{-- STAFF / ADMIN: Complete --}}
+                                            @if (!$isBorrower && $loan->status === 'waiting')
+                                                <li>
+                                                    <form action="{{ route('loans.complete', $loan->id) }}" method="POST" class="action-form">
+                                                        @csrf
+                                                        <button type="button" class="dropdown-item text-info"
+                                                            onclick="confirmAction(this, 'Complete Loan', 'Are you sure you want to complete this loan?', 'Complete', 'btn-info')">
+                                                            <i class="bi bi-check-circle-fill me-2"></i> Complete
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endif
+
+                                            {{-- Divider sebelum Cancel/Resubmit jika ada aksi di atas --}}
+                                            @if (!$isBorrower && in_array($loan->status, ['submitted', 'approved', 'waiting']))
+                                                @if ($canCancel && $loan->status === 'submitted')
+                                                    <li><hr class="dropdown-divider"></li>
                                                 @endif
                                             @endif
-                                        </div>
+
+                                            {{-- ADMIN / BORROWER: Cancel --}}
+                                            @if ($canCancel && $loan->status === 'submitted')
+                                                <li>
+                                                    <button type="button" class="dropdown-item text-warning"
+                                                        onclick="openCancelModal({{ $loan->id }})">
+                                                        <i class="bi bi-slash-circle me-2"></i> Cancel
+                                                    </button>
+                                                </li>
+                                            @endif
+
+                                            {{-- ADMIN / BORROWER: Resubmit --}}
+                                            @if ($canResubmit && in_array($loan->status, ['rejected', 'cancelled']))
+                                                <li>
+                                                    <a href="{{ route('loans.edit', $loan->id) }}" class="dropdown-item text-warning">
+                                                        <i class="bi bi-arrow-clockwise me-2"></i> Resubmit
+                                                    </a>
+                                                </li>
+                                            @endif
+
+                                            {{-- ADMIN only: Edit & Delete (submitted) --}}
+                                            @if ($isAdmin && $loan->status === 'submitted')
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <a href="{{ route('loans.edit', $loan->id) }}" class="dropdown-item">
+                                                        <i class="bi bi-pencil me-2"></i> Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <button type="button" class="dropdown-item text-danger"
+                                                        onclick="confirmDelete({{ $loan->id }})">
+                                                        <i class="bi bi-trash me-2"></i> Delete
+                                                    </button>
+                                                </li>
+                                            @endif
+
+                                        </ul>
                                     </div>
+                                    @else
+                                        <span class="text-muted small">—</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -233,6 +304,80 @@
     </div>
 </div>
 
+{{-- ===== REJECT REASON MODAL (staff/admin) ===== --}}
+<div class="modal fade" id="rejectReasonModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:480px">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header text-white rounded-top-4" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+                <h5 class="modal-title mb-0"><i class="bi bi-x-circle me-2"></i>Reject Loan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="rejectReasonForm" method="POST" action="">
+                @csrf
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3">Please provide a reason for rejecting this loan. The borrower will be able to see this reason.</p>
+                    <label class="form-label fw-semibold">Reason <span class="text-danger">*</span></label>
+                    <textarea name="rejected_reason" id="rejectReasonText" class="form-control rounded-3" rows="4"
+                        placeholder="e.g. Item is currently unavailable, insufficient documentation..."
+                        required minlength="5"></textarea>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-3">
+                        <i class="bi bi-x-circle me-1"></i> Confirm Reject
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ===== CANCEL REASON MODAL (borrower) ===== --}}
+<div class="modal fade" id="cancelReasonModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:480px">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header text-white rounded-top-4" style="background:linear-gradient(135deg,#f97316,#ea580c)">
+                <h5 class="modal-title mb-0"><i class="bi bi-slash-circle me-2"></i>Cancel Loan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="cancelReasonForm" method="POST" action="">
+                @csrf
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3">Please provide a reason for cancelling this loan. Admin/Staff will be able to see this reason.</p>
+                    <label class="form-label fw-semibold">Reason <span class="text-danger">*</span></label>
+                    <textarea name="rejected_reason" id="cancelReasonText" class="form-control rounded-3" rows="4"
+                        placeholder="e.g. No longer needed, found another source..."
+                        required minlength="5"></textarea>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Back</button>
+                    <button type="submit" class="btn rounded-3 text-white" style="background:linear-gradient(135deg,#f97316,#ea580c)">
+                        <i class="bi bi-slash-circle me-1"></i> Confirm Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- ===== VIEW REASON MODAL – dynamic title ===== --}}
+<div class="modal fade" id="viewReasonModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header text-white rounded-top-4" id="viewReasonHeader" style="background:linear-gradient(135deg,#64748b,#475569)">
+                <h5 class="modal-title mb-0" id="viewReasonTitle"><i class="bi bi-info-circle me-2"></i><span id="viewReasonTitleText">Reason</span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p id="viewReasonText" class="mb-0 text-secondary" style="white-space:pre-wrap"></p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Open borrow modal with item details
     function openBorrowModal(itemId, itemName, availableQty, itemCode) {
@@ -261,6 +406,33 @@
         deleteForm.action = '/loans/' + loanId;
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
         deleteModal.show();
+    }
+
+    // Open Reject modal (staff/admin)
+    function openRejectModal(loanId) {
+        const form = document.getElementById('rejectReasonForm');
+        form.action = '/loans/' + loanId + '/reject';
+        document.getElementById('rejectReasonText').value = '';
+        new bootstrap.Modal(document.getElementById('rejectReasonModal')).show();
+    }
+
+    // Open Cancel modal (borrower)
+    function openCancelModal(loanId) {
+        const form = document.getElementById('cancelReasonForm');
+        form.action = '/loans/' + loanId + '/cancel';
+        document.getElementById('cancelReasonText').value = '';
+        new bootstrap.Modal(document.getElementById('cancelReasonModal')).show();
+    }
+
+    // Show reason modal with dynamic title
+    function showReason(reason, title) {
+        document.getElementById('viewReasonText').textContent = reason;
+        document.getElementById('viewReasonTitleText').textContent = title || 'Reason';
+        const isCancelled = title && title.toLowerCase().includes('cancel');
+        document.getElementById('viewReasonHeader').style.background = isCancelled
+            ? 'linear-gradient(135deg,#f97316,#ea580c)'
+            : 'linear-gradient(135deg,#ef4444,#dc2626)';
+        new bootstrap.Modal(document.getElementById('viewReasonModal')).show();
     }
 
     // Confirm action function (Approve, Reject, Borrowed, Complete)

@@ -89,10 +89,11 @@ class LoanController extends Controller
     }
 
     public function edit($id) {
-        $loan = Loan::with('item.category')->findOrFail($id);
+        $loan         = Loan::with('item.category')->findOrFail($id);
+
         $selectedItem = $loan->item;
-        $items = Item::with('category')->get();
-        $categories = Category::all();
+        $items        = Item::with('category')->get();
+        $categories   = Category::all();
         return view('loans.edit', compact('loan', 'items', 'categories', 'selectedItem'));
     }
 
@@ -100,41 +101,48 @@ class LoanController extends Controller
         $loan = Loan::findOrFail($id);
 
         $request->validate([
-            'item_id' => 'required|exists:items,id',
-            'quantity' => 'required|integer|min:1',
-            'loan_date' => 'required|date',
+            'item_id'     => 'required|exists:items,id',
+            'quantity'    => 'required|integer|min:1',
+            'loan_date'   => 'required|date',
             'return_date' => 'required|date|after_or_equal:loan_date',
         ]);
 
-        $item = Item::findOrFail($request->item_id);
-        $newQuantity = $request->quantity;
-        $oldQuantity = $loan->quantity;
-        $quantityDifference = $newQuantity - $oldQuantity;
+        $item            = Item::findOrFail($request->item_id);
+        $newQuantity     = $request->quantity;
+        $oldQuantity     = $loan->quantity;
+        $quantityDiff    = $newQuantity - $oldQuantity;
 
-        if ($quantityDifference > 0 && $item->available_quantity < $quantityDifference) {
+        if ($quantityDiff > 0 && $item->available_quantity < $quantityDiff) {
             return redirect()->back()->with(['error' => 'Quantity not available! Available: ' . $item->available_quantity]);
         }
 
+        // If editing a rejected/cancelled loan → auto-resubmit
+        $isResubmit = in_array($loan->status, ['rejected', 'cancelled']);
+
         $loan->update([
-            'item_id' => $request->item_id,
-            'quantity' => $newQuantity,
-            'loan_date' => $request->loan_date,
-            'return_date' => $request->return_date,
-            'status' => 'submitted',
-            'notes' => $request->notes,
+            'item_id'         => $request->item_id,
+            'quantity'        => $newQuantity,
+            'loan_date'       => $request->loan_date,
+            'return_date'     => $request->return_date,
+            'status'          => $isResubmit ? 'submitted' : $loan->status,
+            'rejected_reason' => $isResubmit ? null : $loan->rejected_reason,
+            'notes'           => $request->notes,
         ]);
 
-        if ($quantityDifference != 0) {
-            $item->available_quantity -= $quantityDifference;
+        if ($quantityDiff != 0) {
+            $item->available_quantity -= $quantityDiff;
             $item->save();
         }
 
         ActivityLog::create([
-            'user_id' => auth()->id(),
-            'activity' => 'Updated loan: ' . $loan->loan_code
+            'user_id'  => auth()->id(),
+            'activity' => $isResubmit
+                ? 'Resubmitted loan: ' . $loan->loan_code
+                : 'Updated loan: ' . $loan->loan_code,
         ]);
 
-        return redirect()->route('loans.index-table')->with(['success' => 'Loan updated successfully!']);
+        $message = $isResubmit ? 'Loan resubmitted successfully!' : 'Loan updated successfully!';
+        return redirect()->route('loans.index-table')->with(['success' => $message]);
     }
 
     public function approve($id) {
@@ -163,16 +171,57 @@ class LoanController extends Controller
             return redirect()->back()->with(['error' => 'Only submitted loans can be rejected!']);
         }
 
-        $loan->status = 'rejected';
-        $loan->staff_id = auth()->id();
+        $request = request();
+        $request->validate([
+            'rejected_reason' => 'required|string|max:1000',
+        ]);
+
+        $loan->status          = 'rejected';
+        $loan->staff_id        = auth()->id();
+        $loan->rejected_reason = $request->rejected_reason;
         $loan->save();
 
         ActivityLog::create([
-            'user_id' => auth()->id(),
-            'activity' => 'Rejected loan: ' . $loan->loan_code
+            'user_id'  => auth()->id(),
+            'activity' => 'Rejected loan: ' . $loan->loan_code,
         ]);
 
         return redirect()->route('loans.index-table')->with(['success' => 'Loan rejected successfully!']);
+    }
+
+    public function cancel($id) {
+        $loan    = Loan::findOrFail($id);
+        $isAdmin = auth()->user()->role === 'Admin';
+
+        // Only borrower (own loan) or admin can cancel
+        if (!$isAdmin && $loan->borrower_id !== auth()->id()) {
+            return redirect()->back()->with(['error' => 'Unauthorized!']);
+        }
+
+        if ($loan->status !== 'submitted') {
+            return redirect()->back()->with(['error' => 'Only submitted loans can be cancelled!']);
+        }
+
+        $request = request();
+        $request->validate([
+            'rejected_reason' => 'required|string|max:1000',
+        ]);
+
+        // Restore item quantity
+        $item = $loan->item;
+        $item->available_quantity += $loan->quantity;
+        $item->save();
+
+        $loan->status          = 'cancelled'; // distinct from rejected
+        $loan->rejected_reason = $request->rejected_reason;
+        $loan->save();
+
+        ActivityLog::create([
+            'user_id'  => auth()->id(),
+            'activity' => 'Cancelled loan: ' . $loan->loan_code,
+        ]);
+
+        return redirect()->route('loans.index-table')->with(['success' => 'Loan cancelled successfully!']);
     }
 
     public function borrowed($id) {

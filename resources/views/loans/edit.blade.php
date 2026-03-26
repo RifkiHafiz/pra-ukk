@@ -58,6 +58,26 @@
         </div>
         @endif
 
+        @if(in_array($loan->status, ['rejected', 'cancelled']) && $loan->rejected_reason)
+        @php
+            $isCancelled = $loan->status === 'cancelled';
+            $bannerLabel = $isCancelled ? 'This loan was cancelled.' : 'This loan was rejected.';
+            $reasonLabel = $isCancelled ? 'Cancellation reason' : 'Rejection reason';
+            $borderColor = $isCancelled ? '#f97316' : '#ef4444';
+            $bgColor     = $isCancelled ? '#fff7ed' : '#fff1f2';
+        @endphp
+        <div class="alert border-0 rounded-3 mb-4" style="background:{{ $bgColor }}; border-left:4px solid {{ $borderColor }} !important;" role="alert">
+            <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-exclamation-triangle-fill mt-1" style="color:{{ $borderColor }}"></i>
+                <div>
+                    <strong style="color:{{ $borderColor }}">{{ $bannerLabel }}</strong>
+                    <p class="mb-0 text-muted small mt-1">{{ $reasonLabel }}: <em>{{ $loan->rejected_reason }}</em></p>
+                    <p class="mb-0 text-muted small">Please make the necessary changes and save to resubmit.</p>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="row g-4">
             <!-- Form Section -->
             <div class="col">
