@@ -19,7 +19,9 @@ class CategoryController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'category_name' => 'required|string|max:255',
+            'category_name' => 'required|string|max:255|unique:categories,category_name',
+        ], [
+            'category_name.unique' => 'Category name already exists. Please use a different name.',
         ]);
 
         $category = Category::create([
@@ -43,7 +45,9 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $request->validate([
-            'category_name' => 'required|string|max:255',
+            'category_name' => 'required|string|max:255|unique:categories,category_name,' . $id,
+        ], [
+            'category_name.unique' => 'Category name already exists. Please use a different name.',
         ]);
 
         $category->update([
